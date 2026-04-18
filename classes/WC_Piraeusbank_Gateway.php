@@ -414,8 +414,6 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      * @return void
      */
     public function payment_fields() {
-        global $woocommerce;
-
         $amount = 0;
 
         //get: order or cart total, to compute max installments number.
@@ -423,8 +421,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             $order_id = absint( get_query_var( 'order-pay' ) );
             $order    = wc_get_order( $order_id );
             $amount   = $order ? $order->get_total() : 0;
-        } elseif ( ! $woocommerce->cart->is_empty() ) {
-            $amount = $woocommerce->cart->total;
+        } elseif ( WC()->cart && ! WC()->cart->is_empty() ) {
+            $amount = WC()->cart->total;
         }
 
         if ( $description = $this->get_description() ) {
