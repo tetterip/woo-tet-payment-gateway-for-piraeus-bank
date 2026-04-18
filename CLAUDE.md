@@ -46,7 +46,9 @@ languages/
 
 ## Versioning
 
-Follows [Semantic Versioning](https://semver.org/). Always update `Version:` in `wooshop-piraeus.php` and add a changelog entry when releasing.
+Follows [Semantic Versioning](https://semver.org/). Always update `Version:` in `wooshop-piraeus.php` and add a changelog entry in `CHANGELOG.md` when releasing.
+
+Current version: **3.2.4**
 
 ## Commit style
 
@@ -55,3 +57,20 @@ Short imperative subject line, no period. Body optional. Example:
 ```
 Fix cardholder name field not cleared after failed payment
 ```
+
+## Known issues / technical debt
+
+These have been identified but not yet fixed — pick them up before adding new features:
+
+- **`functions.php` is dead code** — `piraeusbank_message()` there is a duplicate of `Application::piraeusbank_message()` and the file is never `require`d. Safe to delete.
+- **`Application::declare_transactions()`** — calls `FeaturesUtil::declare_compatibility()` with `$wpdb->prefix . 'piraeusbank_transactions'` as the feature ID, which is not a valid WooCommerce feature. Investigate and remove or correct.
+- **`validate_fields()` skips Block Checkout** — returns `false` immediately on REST requests without checking if fields are actually present, meaning Block Checkout never validates required billing fields.
+- **`CurrencyCode` hardcoded as `'978'` (EUR)** — `generate_piraeusbank_form()` always sends EUR regardless of WooCommerce currency setting. Should map `get_woocommerce_currency()` to ISO 4217 numeric code.
+- **`admin_options()` uses raw cURL** — fetches server IP via `curl_init()` instead of `wp_remote_get()`, bypassing WordPress HTTP API and proxy settings.
+- **No `uninstall.php`** — `wp_piraeusbank_transactions` table and all plugin options persist in the database after uninstallation.
+- **Installments logic duplicated** — the `pb_installments_variation` parsing loop appears in `payment_fields()`, `Checkout_Block::calculate_max_installments()`. Should be extracted to a single method on the gateway.
+
+## Security notes
+
+- Bank password is stored plaintext in WP options (unavoidable — SOAP API requires MD5 of the raw password at call time).
+- Response authenticity is verified via SHA-256 and HMAC-SHA256 hash of the transaction ticket before any order status change.
