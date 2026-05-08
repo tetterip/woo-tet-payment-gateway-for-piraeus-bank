@@ -1,8 +1,8 @@
 <?php
 /*
-  Plugin Name: Piraeus Bank WooCommerce Payment Gateway
+  Plugin Name: Piraeus Bank Payment Gateway for WooCommerce
   Description: Piraeus Bank Payment Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards On your Woocommerce Powered Site.
-  Version: 3.3.0
+  Version: 3.3.1
   Author: Michalis Tetteris
   Author URI: https://ttrp.gr
   License: GPL-3.0+

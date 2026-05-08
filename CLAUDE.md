@@ -1,4 +1,4 @@
-# Piraeus Bank WooCommerce Payment Gateway — Claude Code Context
+# Piraeus Bank Payment Gateway for WooCommerce — Claude Code Context
 
 ## Project overview
 
