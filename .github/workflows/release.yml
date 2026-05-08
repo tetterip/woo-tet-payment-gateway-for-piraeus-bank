@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Build release zip
+        run: |
+          SLUG="woo-tet-payment-gateway-for-piraeus-bank"
+          mkdir -p "build/$SLUG"
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='CLAUDE.md' \
+            --exclude='package.json' \
+            --exclude='build/' \
+            . "build/$SLUG/"
+          cd build
+          zip -r "../${SLUG}-${VERSION}.zip" "$SLUG/"
+
+      - name: Extract changelog entry
+        run: |
+          python3 - <<'EOF'
+          import re, os
+          with open('CHANGELOG.md') as f:
+              content = f.read()
+          m = re.search(r'(## \[\d+\.\d+\.\d+\].*?\n.*?)(?=\n## |\Z)', content, re.DOTALL)
+          notes = m.group(1).strip() if m else 'See CHANGELOG.md for details.'
+          with open('release-notes.md', 'w') as out:
+              out.write(notes)
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "v${{ env.VERSION }}"
+          body_path: release-notes.md
+          files: "woo-tet-payment-gateway-for-piraeus-bank-${{ env.VERSION }}.zip"
