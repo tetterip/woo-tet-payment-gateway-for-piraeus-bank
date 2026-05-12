@@ -2,7 +2,7 @@
 /*
   Plugin Name: Piraeus Bank Payment Gateway for WooCommerce
   Description: Piraeus Bank Payment Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards On your Woocommerce Powered Site.
-  Version: 3.3.1
+  Version: 3.4.0
   Author: Michalis Tetteris
   Author URI: https://ttrp.gr
   License: GPL-3.0+
@@ -75,6 +75,50 @@ add_action( 'plugins_loaded', function () {
     // what WooCommerce uses internally when scanning active plugins.
     new \Papaki\PiraeusBank\WooCommerce\Application( __FILE__ );
 }, 0 );
+
+// ── ttrp.gr Plugins menu ─────────────────────────────────────────────────────
+function ttrp_pb_maybe_register_brand_menu(): void {
+    global $menu;
+    if ( is_array( $menu ) ) {
+        foreach ( $menu as $item ) {
+            if ( isset( $item[2] ) && 'ttrp-plugins' === $item[2] ) return;
+        }
+    }
+    if ( ! function_exists( 'ttrp_brand_dashboard' ) ) {
+        function ttrp_brand_dashboard(): void {
+            global $submenu;
+            $target = null;
+            if ( ! empty( $submenu['ttrp-plugins'] ) ) {
+                foreach ( $submenu['ttrp-plugins'] as $item ) {
+                    if ( $item[2] !== 'ttrp-plugins' ) { $target = $item[2]; break; }
+                }
+            }
+            if ( $target ) {
+                $url = esc_url( admin_url( 'admin.php?page=' . $target ) );
+                echo '<meta http-equiv="refresh" content="0;url=' . $url . '">';
+                echo '<script>window.location.replace("' . $url . '");</script>';
+            }
+        }
+    }
+    $svg_path = plugin_dir_path( __FILE__ ) . 'assets/ttrp-logo.svg';
+    $icon = file_exists( $svg_path )
+        ? 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( $svg_path ) )
+        : 'dashicons-admin-plugins';
+    add_menu_page( 'ttrp.gr Plugins', 'ttrp.gr Plugins', 'manage_options', 'ttrp-plugins', 'ttrp_brand_dashboard', $icon, 56 );
+    add_action( 'admin_menu', function () { remove_submenu_page( 'ttrp-plugins', 'ttrp-plugins' ); }, 999 );
+}
+function ttrp_pb_add_submenu(): void {
+    add_submenu_page( 'ttrp-plugins', 'Piraeus Bank', 'Piraeus Bank', 'manage_options', 'ttrp-piraeus-bank', '__return_null' );
+}
+function ttrp_pb_redirect(): void {
+    if ( isset( $_GET['page'] ) && 'ttrp-piraeus-bank' === $_GET['page'] ) {
+        wp_safe_redirect( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=piraeusbank_gateway' ) );
+        exit;
+    }
+}
+add_action( 'admin_menu', 'ttrp_pb_maybe_register_brand_menu', 5 );
+add_action( 'admin_menu', 'ttrp_pb_add_submenu' );
+add_action( 'admin_init',  'ttrp_pb_redirect' );
 
 require_once plugin_dir_path( __FILE__ ) . 'update-checker.php';
 new TTRP_Update_Checker( __FILE__, 'woo-tet-payment-gateway-for-piraeus-bank' );

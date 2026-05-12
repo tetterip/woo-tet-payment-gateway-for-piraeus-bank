@@ -31,6 +31,8 @@ Based on the original plugin by [emspace.gr](https://wordpress.org/plugins/woo-p
 2. Activate through **Plugins > Installed Plugins**
 3. Go to **WooCommerce > Settings > Payments > Piraeus Bank** and configure
 
+> **Shortcut:** After activation the gateway settings are also accessible via **ttrp.gr Plugins → Piraeus Bank** in the WordPress admin sidebar.
+
 ### Bank setup
 
 Provide the following URLs to Piraeus Bank at epayments@piraeusbank.gr:

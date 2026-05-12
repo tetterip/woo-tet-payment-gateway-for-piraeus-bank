@@ -9,7 +9,7 @@ Forked from the abandoned upstream plugin by emspace.gr; our primary contributio
 ## Architecture
 
 ```
-wooshop-piraeus.php                          – Plugin entry point; autoloader, feature declarations, bootstraps Application
+wooshop-piraeus.php                          – Plugin entry point; autoloader, feature declarations, bootstraps Application, ttrp.gr Plugins menu
 classes/
   Application.php                            – Registers hooks, gateway filter, language loading, state additions (CY, DE)
   WC_Piraeusbank_Gateway.php                 – Core gateway: settings, form generation, SOAP calls, response handling
@@ -26,6 +26,8 @@ languages/
 **Namespace** — all classes use `Papaki\PiraeusBank\WooCommerce\`. The autoloader in `wooshop-piraeus.php` maps this to `classes/`.
 
 **HPOS compatibility** — declared via `FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true)` on `before_woocommerce_init` at the top level of the entry point (not inside a callback), so it fires before `plugins_loaded`.
+
+**ttrp.gr Plugins menu** — `ttrp_pb_maybe_register_brand_menu()` / `ttrp_pb_add_submenu()` / `ttrp_pb_redirect()` at the bottom of `wooshop-piraeus.php`. The submenu redirects via `admin_init` to `wc-settings&tab=checkout&section=piraeusbank_gateway`. Top-level menu shared across all ttrp.gr plugins; guarded by `global $menu` check and `function_exists('ttrp_brand_dashboard')`.
 
 **Feature declarations must be top-level** — `before_woocommerce_init` fires before `plugins_loaded`; any declaration registered inside `plugins_loaded` will never run.
 
