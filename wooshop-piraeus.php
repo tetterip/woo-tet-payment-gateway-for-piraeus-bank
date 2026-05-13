@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Plugin Name:       Piraeus Bank Payment Gateway for WooCommerce
  * Plugin URI:        https://ttrp.gr
@@ -12,9 +12,10 @@
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce
  * Requires at least: 4.0
+ * Tested up to:      6.9.4
  * Requires PHP:      7.4
  * WC requires at least: 5.0
- * WC tested up to:   10.6
+ * WC tested up to:   10.7.0
  * Based on:          "Piraeus Bank Greece Payment Gateway for WooCommerce" by emspace.gr
  */
 
