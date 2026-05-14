@@ -69,26 +69,29 @@ class Checkout_Block {
                 );
             }
 
-            woocommerce_register_additional_checkout_field(
-                [
-                    'id'         => Application::PLUGIN_NAMESPACE . '/installments',
-                    'label'      => __( 'Installments', Application::PLUGIN_NAMESPACE ),
-                    'location'   => 'order',
-                    'type'       => 'select',
-                    'required'   => false,
-                    // Use calculated-by-cart/order total options so frontend matches the gateway limitations
-                    'options'    => $this->get_installments_options_up_to( $this->calculate_max_installments() ),
-                    'show_in_rest' => [
-                        'schema' => [
-                            'type' => 'string',
+            $pb_installments           = (int) $gateway->get_option( 'pb_installments' );
+            $pb_installments_variation = $gateway->get_option( 'pb_installments_variation' ) ?? '';
+            if ( $pb_installments > 1 || ! empty( $pb_installments_variation ) ) {
+                woocommerce_register_additional_checkout_field(
+                    [
+                        'id'         => Application::PLUGIN_NAMESPACE . '/installments',
+                        'label'      => __( 'Installments', Application::PLUGIN_NAMESPACE ),
+                        'location'   => 'order',
+                        'type'       => 'select',
+                        'required'   => false,
+                        'options'    => $this->get_installments_options_up_to( $this->calculate_max_installments() ),
+                        'show_in_rest' => [
+                            'schema' => [
+                                'type' => 'string',
+                            ],
+                        ],
+                        'attributes' => [
+                            'data-payment-method' => 'piraeusbank_gateway',
+                            'data-field-id' => 'piraeusbank-installments',
                         ],
                     ],
-                    'attributes' => [
-                        'data-payment-method' => 'piraeusbank_gateway',
-                        'data-field-id' => 'piraeusbank-installments',
-                    ],
-                ],
-            );
+                );
+            }
         }
     }
 

@@ -50,7 +50,7 @@ languages/
 
 Follows [Semantic Versioning](https://semver.org/). Always update `Version:` in `wooshop-piraeus.php` and add a changelog entry in `CHANGELOG.md` when releasing.
 
-Current version: **3.3.0**
+Current version: **3.4.2**
 
 ## Commit style
 

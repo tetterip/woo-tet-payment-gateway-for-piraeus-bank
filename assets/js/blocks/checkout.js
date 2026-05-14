@@ -83,24 +83,22 @@
             });
         }
 
-        const options = [];
-        for ( let i = 1; i <= max_installments; i++ ) {
-            if( i === 1 ) {
-                options.push( { value: i, label: no_installments_label } );
-            } else {
-                options.push( { value: i, label: i.toString() } );
-            }
+        const instField = getFieldEl(installmentsFieldId);
+        const instContainer = instField ? instField.closest('.wc-block-components-select-input') : null;
+        if ( !instContainer ) return;
+
+        if ( max_installments <= 1 ) {
+            instContainer.style.display = 'none';
+            return;
         }
 
-        const instField = getFieldEl(installmentsFieldId);
-        if (instField) {
-            instField.innerHTML = '';
-            options.forEach(option => {
-                const optionEl = document.createElement('option');
-                optionEl.value = option.value;
-                optionEl.textContent = option.label;
-                instField.appendChild(optionEl);
-            });
+        instContainer.style.display = '';
+        instField.innerHTML = '';
+        for ( let i = 1; i <= max_installments; i++ ) {
+            const optionEl = document.createElement('option');
+            optionEl.value = i;
+            optionEl.textContent = i === 1 ? no_installments_label : i.toString();
+            instField.appendChild(optionEl);
         }
     }
 
@@ -125,9 +123,16 @@
             previousPaymentMethod = currentPaymentMethod;
 
             const cardField = getFieldEl(cardFieldId);
-            const instField = getFieldEl(installmentsFieldId);
             cardField && (cardField.closest('.wc-block-components-text-input').style.display = (currentPaymentMethod === GATEWAY_NAME && cardHolderEnabled) ? '' : 'none');
-            instField && (instField.closest('.wc-block-components-select-input').style.display = (currentPaymentMethod === GATEWAY_NAME) ? '' : 'none');
+
+            const instField = getFieldEl(installmentsFieldId);
+            if ( instField ) {
+                if ( currentPaymentMethod !== GATEWAY_NAME ) {
+                    instField.closest('.wc-block-components-select-input').style.display = 'none';
+                } else {
+                    onCartUpdate();
+                }
+            }
         }
     };
     subscribe( onPaymentChange, 'wc/store/payment' );
