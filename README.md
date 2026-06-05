@@ -35,7 +35,7 @@ Based on the original plugin by [emspace.gr](https://wordpress.org/plugins/woo-p
 
 ### Bank setup
 
-Provide the following URLs to Piraeus Bank at epayments@piraeusbank.gr:
+Provide the following URLs to Piraeus Bank at OnlineServices@epayworldwide.gr:
 
 **With permalinks:**
 - Success: `https://yourdomain.gr/wc-api/WC_Piraeusbank_Gateway?peiraeus=success`

@@ -189,7 +189,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
         echo '<div style="border: 1px dashed #000; display: inline-block; padding: 10px;">';
         echo '<h4>' . __( 'Technical data to be submitted to Piraeus Bank', Application::PLUGIN_NAMESPACE ) . '</h4>';
-        echo '<p>' . __( 'The data to be submitted to Piraeus Bank(<a href="mailto:epayments@piraeusbank.gr">epayments@piraeusbank.gr</a>) in order to provide the necessary technical info (test/live account) for transactions are as follows', Application::PLUGIN_NAMESPACE ) . ':</p>';
+        echo '<p>' . __( 'The data to be submitted to Piraeus Bank(<a href="mailto:OnlineServices@epayworldwide.gr">OnlineServices@epayworldwide.gr</a>) in order to provide the necessary technical info (test/live account) for transactions are as follows', Application::PLUGIN_NAMESPACE ) . ':</p>';
         echo '<ul>';
         echo '<li><strong>Website URL:</strong> ' . $host . '</li>';
         echo '<li><strong>Referrer url:</strong> ' . $host . 'checkout/' . ' </li>';
