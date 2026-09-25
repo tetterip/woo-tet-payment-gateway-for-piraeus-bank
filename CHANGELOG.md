@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.4.8] - 2026-09-25
+
+### Fixed
+- Credits corrected: the direct upstream is *Piraeus Bank WooCommerce Payment Gateway* by Papaki (Enartia S.A.; contributors enartia, ggeorgopoulos, akatopodis), which is still listed and maintained on wordpress.org, and is itself based on the emspace.gr original. 3.4.7 wrongly said the original was no longer listed. The README and the header `Based on` line are updated.
+
+---
+
 ## [3.4.7] - 2026-09-25
 
 ### Added
