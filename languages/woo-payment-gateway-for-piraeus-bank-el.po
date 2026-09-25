@@ -75,19 +75,66 @@ msgstr ""
 "<strong> Θα πρέπει να έχετε ενεργοποιημένο το SOAP στον Server/Hosting σας</"
 "strong>, είναι απαραίτητο για να λειτουργήσει σωστά το plugin!"
 
-#: classes/WC_Piraeusbank_Gateway.php:190
+#: classes/WC_Piraeusbank_Gateway.php
 msgid ""
-"<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
-"gradually abolish the Preauthorized Payment Service for all merchants, "
-"beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> You are "
-"highly recommended to disable the preAuthorized Payment Service as soon as "
-"possible."
+"Piraeus Bank: a payment response arrived whose HashKey could not be "
+"verified. The order status was not changed. Check the transaction in the "
+"Piraeus Bank AdminTool before fulfilling this order."
 msgstr ""
-"<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
-"προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
-"διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
-"που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
-"απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν."
+"Τράπεζα Πειραιώς: ήρθε απάντηση πληρωμής με HashKey που δεν επαληθεύτηκε. Η "
+"κατάσταση της παραγγελίας δεν άλλαξε. Ελέγξτε τη συναλλαγή στο AdminTool της "
+"Τράπεζας Πειραιώς πριν εκτελέσετε την παραγγελία."
+
+#: classes/WC_Piraeusbank_Gateway.php
+msgid ""
+"Piraeus Bank: a failure response arrived whose HashKey could not be "
+"verified. The order status was not changed."
+msgstr ""
+"Τράπεζα Πειραιώς: ήρθε απάντηση αποτυχίας με HashKey που δεν επαληθεύτηκε. Η "
+"κατάσταση της παραγγελίας δεν άλλαξε."
+
+#: classes/WC_Piraeusbank_Gateway.php
+#, php-format
+msgid ""
+"Piraeus Bank: the IRIS payment was started but not yet confirmed "
+"(ResponseCode 09). It may still be completed. Check it in the Piraeus Bank "
+"AdminTool before shipping or cancelling. Support Reference ID: %s"
+msgstr ""
+"Τράπεζα Πειραιώς: η πληρωμή IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα "
+"(ResponseCode 09). Μπορεί να ολοκληρωθεί αργότερα. Ελέγξτε την στο AdminTool "
+"της Τράπεζας Πειραιώς πριν αποστείλετε ή ακυρώσετε την παραγγελία. Support "
+"Reference ID: %s"
+
+#: classes/WC_Piraeusbank_Gateway.php
+msgid ""
+"Your IRIS payment has been started but not yet confirmed by the bank. Please "
+"do not pay again. We will update your order as soon as the payment is "
+"confirmed."
+msgstr ""
+"Η πληρωμή σας μέσω IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα από την "
+"τράπεζα. Παρακαλούμε μην πληρώσετε ξανά. Θα ενημερώσουμε την παραγγελία σας "
+"μόλις επιβεβαιωθεί η πληρωμή."
+
+#: classes/WC_Piraeusbank_Gateway.php
+msgid "Piraeus Bank: the customer cancelled the payment on the bank page."
+msgstr "Τράπεζα Πειραιώς: ο πελάτης ακύρωσε την πληρωμή στη σελίδα της τράπεζας."
+
+#: classes/WC_Piraeusbank_Gateway.php
+msgid "Your payment was cancelled. You can try again."
+msgstr "Η πληρωμή σας ακυρώθηκε. Μπορείτε να δοκιμάσετε ξανά."
+
+#~ msgid ""
+#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
+#~ "gradually abolish the Preauthorized Payment Service for all merchants, "
+#~ "beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> You are "
+#~ "highly recommended to disable the preAuthorized Payment Service as soon as "
+#~ "possible."
+#~ msgstr ""
+#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
+#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
+#~ "διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
+#~ "που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
+#~ "απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν."
 
 #: classes/WC_Piraeusbank_Gateway.php:200
 msgid "Enable/Disable"
@@ -213,27 +260,24 @@ msgstr ""
 " Χρησιμοποιείται σε συνδυασμό με το Proxy Host. Αφήστε κενό για ανώνυμη "
 "σύνδεση."
 
-#: classes/WC_Piraeusbank_Gateway.php:290
-msgid "Pre-Authorize"
-msgstr "Προ-Έγκριση"
+#~ msgid "Pre-Authorize"
+#~ msgstr "Προ-Έγκριση"
 
-#: classes/WC_Piraeusbank_Gateway.php:292
-msgid "Enable to capture preauthorized payments"
-msgstr "Ενεργοποιήστε για να συλλέγεται προεγκεκριμένες πληρωμές"
+#~ msgid "Enable to capture preauthorized payments"
+#~ msgstr "Ενεργοποιήστε για να συλλέγεται προεγκεκριμένες πληρωμές"
 
-#: classes/WC_Piraeusbank_Gateway.php:294
-msgid ""
-"<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
-"gradually abolish the Preauthorized Payment Service for all merchants, "
-"beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> Default "
-"payment method is Purchase, enable for Pre-Authorized payments. You will "
-"then need to accept them from Piraeus Bank AdminTool"
-msgstr ""
-"<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
-"προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
-"διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
-"που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
-"απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν"
+#~ msgid ""
+#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
+#~ "gradually abolish the Preauthorized Payment Service for all merchants, "
+#~ "beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> Default "
+#~ "payment method is Purchase, enable for Pre-Authorized payments. You will "
+#~ "then need to accept them from Piraeus Bank AdminTool"
+#~ msgstr ""
+#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
+#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
+#~ "διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
+#~ "που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
+#~ "απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν"
 
 #: classes/WC_Piraeusbank_Gateway.php:297
 msgid "Return page URL <br />(Successful or Failed Transactions)"

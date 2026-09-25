@@ -1,6 +1,6 @@
 # Piraeus Bank Payment Gateway for WooCommerce
 
-WooCommerce payment gateway for Piraeus Bank (Greek market). Supports redirect-based card payments, pre-authorisation, free instalments, IRIS payments, and Block-based Checkout.
+WooCommerce payment gateway for Piraeus Bank (Greek market). Supports redirect-based card payments, free instalments, IRIS payments, and Block-based Checkout.
 
 Based on [Piraeus Bank WooCommerce Payment Gateway](https://wordpress.org/plugins/woo-payment-gateway-for-piraeus-bank/) by Papaki (Enartia S.A.) (see [Credits](#credits)).
 
@@ -8,7 +8,6 @@ Based on [Piraeus Bank WooCommerce Payment Gateway](https://wordpress.org/plugin
 
 - Redirect-based payment via Piraeus Bank paycenter
 - 3D Secure v2 / SCA compliant
-- Pre-authorised transactions
 - Free instalments (configurable max per order total)
 - IRIS payment support
 - Cardholder name field (optional)

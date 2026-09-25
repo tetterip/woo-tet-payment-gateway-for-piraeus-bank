@@ -30,6 +30,7 @@ jobs:
             --exclude='CLAUDE.md' \
             --exclude='package.json' \
             --exclude='build/' \
+            --exclude='tests/' \
             . "build/$SLUG/"
           cd build
           zip -r "../${SLUG}-${VERSION}.zip" "$SLUG/"

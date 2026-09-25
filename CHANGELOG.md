@@ -6,6 +6,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.5.1] - 2026-09-25
+
+The payment-handling changes below shipped in the 3.5.0 code but were missing from its changelog. This release adds their Greek translations and documents them.
+
+### Security
+- **Bank callbacks are now authenticated before any order is changed.** Previously anyone could send a request to the callback URL with a guessed order number and set that order to *Failed*, including orders that were already paid, and orders paid with other gateways. Now:
+  - The MerchantReference sent to the bank is `{order number}-{12 random characters}`. The random part is a per-attempt secret, stored with the transaction ticket, and a callback must echo it back.
+  - The order must have been paid with this gateway, and an order that is already paid is never changed.
+  - A response whose HashKey does not verify no longer marks the order *Failed*. The status stays the same and an order note asks you to check the transaction in the Piraeus Bank AdminTool.
+- References in the old format (plain order number) from payments started before the update are accepted for 24 hours, so payments in progress during the update still complete.
+
+### Fixed
+- **Failed and cancelled payments were ignored.** The failure and cancel callbacks were checked against the customer's WooCommerce session, but the bank sends them cross-site and browsers do not send the session cookie with them (SameSite=Lax). So declined payments stayed in *Pending payment* with no message. They are now authenticated by the MerchantReference instead.
+- **Cancel on the bank page** now cancels the order and shows "Your payment was cancelled" when the bank's cancel request includes the MerchantReference. Otherwise the customer is returned to the checkout as before.
+- **IRIS ResponseCode 09** (transfer started but not yet confirmed) put the order in *Failed*, even though the payment may still settle. IRIS payments cannot be refunded, so a customer paying again could be charged twice. The order now goes to *On hold* with a note to check it in the AdminTool, and the customer is told not to pay again.
+- The custom return page redirect passed an undefined `type` value.
+
+### Removed
+- **Pre-authorisation** (the "Pre-Authorize" setting and its admin notice). Pre-authorised orders were marked paid although the funds were only reserved and had to be captured in the AdminTool, otherwise they expired. Piraeus Bank has been phasing the service out. Every transaction is now a Sale (captured immediately). Stores that had the setting enabled switch to Sale automatically.
+
+### Changed
+- In the Piraeus Bank AdminTool, transactions now appear as `1234-A8K2…` instead of `1234`. The order number is still at the start, so searching by order number still works. The callback URLs registered with the bank do not change.
+
+### Added
+- `tests/run.php`: zero-dependency tests for the MerchantReference and IRIS helpers (`php tests/run.php`). Excluded from the release zip.
+
+---
+
 ## [3.5.0] - 2026-09-25
 
 ### Added

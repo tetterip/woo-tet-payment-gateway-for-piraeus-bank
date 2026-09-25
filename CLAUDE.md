@@ -2,7 +2,7 @@
 
 ## Project overview
 
-WooCommerce payment gateway for Piraeus Bank (Greek market). Uses a redirect flow to the bank's paycenter. Supports pre-auth, instalments, IRIS, 3DS v2, and Block-based Checkout.
+WooCommerce payment gateway for Piraeus Bank (Greek market). Uses a redirect flow to the bank's paycenter. Supports instalments, IRIS, 3DS v2, and Block-based Checkout.
 
 Modified fork of *Piraeus Bank WooCommerce Payment Gateway* by Papaki (Enartia S.A.), GPL-3.0-or-later ([wordpress.org](https://wordpress.org/plugins/woo-payment-gateway-for-piraeus-bank/)), itself based on the emspace.gr original. Upstream is **still maintained** (v3.2.0, Jan 2026), so check it for bank-side fixes worth porting. Our primary contributions are HPOS compatibility, Block Checkout support, PHP 7.4/8.x fixes, and ongoing maintenance.
 
@@ -17,6 +17,9 @@ classes/
   WC_Piraeusbank_Gateway.php                 – Core gateway: settings, form generation, SOAP calls, response handling
   Checkout_Block.php                         – Block Checkout integration; registers payment method type, cardholder field
   WC_Piraeusbank_Gateway_Checkout_Block.php  – Block-side payment method type (JS + PHP glue)
+  Payment_Reference.php                      – Pure helpers: MerchantReference build/parse, IRIS detection (tested)
+tests/
+  run.php                                    – Zero-dependency tests: `php tests/run.php`
 assets/js/blocks/
   checkout.js                                – Block Checkout frontend script
 languages/
@@ -33,7 +36,9 @@ languages/
 
 **Feature declarations must be top-level** — `before_woocommerce_init` fires before `plugins_loaded`; any declaration registered inside `plugins_loaded` will never run.
 
-**Payment flow** — redirect to Piraeus paycenter → bank POSTs back to `/?wc-api=WC_Piraeusbank_Gateway` → `check_piraeusbank_response()` handles success / fail / cancel.
+**Payment flow** — redirect to Piraeus paycenter → bank POSTs back to `/?wc-api=WC_Piraeusbank_Gateway` → `check_piraeusbank_response()` handles success / fail / cancel. Always a Sale (`RequestType 02`); pre-authorisation was removed in 3.5.0 (no capture step existed, yet orders were marked paid).
+
+**Callback authentication** — the bank POSTs cross-site, so the WC session cookie is **not** sent (SameSite=Lax): never use the session to validate a callback. Instead the `MerchantReference` is `{order_id}-{12 random chars}` (`Payment_Reference`), stored with its ticket in `wp_piraeusbank_transactions.merch_ref`; a callback must match a stored row, the order must use this gateway, and a paid order is never changed. A HashKey that fails verification leaves the order unchanged (note only). Declines on the fail URL usually carry an empty HashKey, so the reference secret is their only authentication. Plain order-ID references (pre-3.5.0) are accepted for 24h only. IRIS `ResponseCode 09` = transfer pending → on-hold, never failed.
 
 **SOAP** — all bank communication uses PHP's SOAP extension. Server must have it installed.
 
@@ -75,5 +80,5 @@ These have been identified but not yet fixed — pick them up before adding new 
 
 ## Security notes
 
-- Bank password is stored plaintext in WP options (unavoidable — SOAP API requires MD5 of the raw password at call time).
-- Response authenticity is verified via SHA-256 and HMAC-SHA256 hash of the transaction ticket before any order status change.
+- Bank password is stored plaintext in WP options. Could be stored as its MD5 instead (that digest is what the SOAP call sends); not done yet.
+- Success responses are verified via SHA-256 / HMAC-SHA256 of the attempt's transaction ticket before any order status change; see *Callback authentication* above for the rest.
