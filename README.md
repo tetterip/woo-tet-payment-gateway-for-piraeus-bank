@@ -2,7 +2,7 @@
 
 WooCommerce payment gateway for Piraeus Bank (Greek market). Supports redirect-based card payments, pre-authorisation, free instalments, IRIS payments, and Block-based Checkout.
 
-Based on the original plugin by [emspace.gr](https://wordpress.org/plugins/woo-payment-gateway-piraeus-bank-greece/).
+Based on the original plugin by [emspace.gr](https://wordpress.org/plugins/woo-payment-gateway-piraeus-bank-greece/), later maintained by Papaki (see [Credits](#credits)).
 
 ## Features
 
@@ -47,6 +47,18 @@ Provide the following URLs to Piraeus Bank at OnlineServices@epayworldwide.gr:
 - Failure: `https://yourdomain.gr/?wc-api=WC_Piraeusbank_Gateway&peiraeus=fail`
 - Cancel: `https://yourdomain.gr/?wc-api=WC_Piraeusbank_Gateway&peiraeus=cancel`
 
+## Credits
+
+This plugin is a modified version of *Piraeus Bank Greece Payment Gateway for WooCommerce*, originally by
+**emspace.gr** and later maintained by **Papaki** (the `Papaki\PiraeusBank\WooCommerce` namespace comes from
+that version), released under GPL-3.0-or-later. The original is no longer listed on wordpress.org.
+
+Modified and maintained by [ttrp.gr](https://ttrp.gr) since 2026-04: HPOS compatibility, Block Checkout support,
+PHP 7.4/8.x fixes and ongoing maintenance. See [CHANGELOG.md](CHANGELOG.md) for all changes.
+
+This is not an official plugin of Piraeus Bank and is not endorsed by it. "Piraeus Bank" is a trademark of its
+owner and is used only to describe compatibility.
+
 ## License
 
-GPL-3.0-or-later — see [http://www.gnu.org/licenses/gpl-3.0.txt](http://www.gnu.org/licenses/gpl-3.0.txt)
+GPL-3.0-or-later — see [LICENSE](LICENSE).

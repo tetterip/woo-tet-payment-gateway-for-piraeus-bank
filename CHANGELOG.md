@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.4.7] - 2026-09-25
+
+### Added
+- `LICENSE` file with the full GPL-3.0 text.
+- README *Credits* section: the original plugin by emspace.gr, later maintained by Papaki, the modifications by ttrp.gr, and a note that this is not an official Piraeus Bank plugin. The `Based on` header line now also names Papaki.
+
+---
+
 ## [3.4.6] - 2026-09-25
 
 ### Changed
