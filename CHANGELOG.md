@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.0] - 2026-09-25
+
+### Added
+- **Admin warning when the bank rejects the credentials.** ResultCode 100 (Authentication Error) means the Username or Password of the Ticketing Web Service is wrong, and it blocks every card payment. Until now it only showed up as a failed customer payment and an order note. A warning now appears on every admin page, saying since when and with the bank's response, with a link to the settings. It cannot be dismissed and disappears by itself after the next successful payment attempt.
+- **Daily check for payments without a bank response.** Orders that were sent to the bank but never got a response (for example because a firewall blocked it) are flagged once, with an order note listing their MerchantReference, and listed in a dismissible admin notice. Order status is never changed: most are abandoned payments, but an approved payment whose response was lost looks the same, so they are reported for checking in the Piraeus Bank AdminTool.
+- **Callback diagnostics** on the gateway settings page:
+  - **Test callback URL** sends a realistic declined-payment response from the server to its own Success and Failure URLs and reports whether it reached the plugin. It detects host firewalls (ModSecurity, Imunify360, BitNinja, LiteSpeed, security plugins) that block the bank's responses. No order is created or changed.
+  - **Cloudflare detection**: when the site is served through Cloudflare, the page explains how to add a WAF skip rule for the callback path and lists Cloudflare's current IPv4 ranges to copy.
+  - A **Copy all to clipboard** button for the technical data to send to the bank.
+- **Google Pay**: the `PanCardType` response field (FPAN = real card number, DPAN = device token) is stored on the order, and the order note says "Paid via Google Pay".
+- `uninstall.php`: deleting the plugin removes its transaction-ticket table, settings, cached data and scheduled task. Order data is kept.
+
+### Changed
+- **Server IP**: the settings page now shows the server's **outbound** IP (the value the bank must register) separately from the IP the website is reached on, and warns when they differ. Previously a single "Server IP" was shown, which on some hosts was the wrong one. The lookup now uses the WordPress HTTP API instead of raw cURL. If the IP cannot be found, the page explains how to get it. A host can supply it with the `piraeusbank_outbound_ip` filter.
+- **3-D Secure phone numbers**: a Greek number is now sent only in the field that matches its type (69x → MobilePhone, 2x → HomePhone) instead of in all three fields. This gives the card issuer better data for approving payments without a challenge screen. Athens numbers starting 211 / 213 were previously mistaken for South Sudan / Algeria prefixes. Numbers from other countries are sent as before.
+- **Declined payments** now return the customer to the order's pay page, with the decline message and a way to try again, instead of the order-received page. This applies when the return page setting is the default "Thank You Page".
+- **Currency**: the order's currency is sent to the bank instead of always EUR (978). The gateway is hidden when the store currency has no known ISO 4217 code, so an amount can no longer be charged as euros by mistake.
+- **Bank password**: only the MD5 hash the bank needs is stored, not the password itself. An existing password is converted automatically on the first page load after the update. The field now always appears empty: leave it blank to keep the saved password.
+- The ticket table is pruned: rows older than 30 days are deleted by the daily check.
+- The settings-page texts are now translatable, including the note about the callback URLs, which was hardcoded in Greek.
+
+---
+
 ## [3.5.1] - 2026-09-25
 
 The payment-handling changes below shipped in the 3.5.0 code but were missing from its changelog. This release adds their Greek translations and documents them.

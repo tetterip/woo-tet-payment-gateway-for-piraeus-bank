@@ -17,7 +17,15 @@ classes/
   WC_Piraeusbank_Gateway.php                 – Core gateway: settings, form generation, SOAP calls, response handling
   Checkout_Block.php                         – Block Checkout integration; registers payment method type, cardholder field
   WC_Piraeusbank_Gateway_Checkout_Block.php  – Block-side payment method type (JS + PHP glue)
-  Payment_Reference.php                      – Pure helpers: MerchantReference build/parse, IRIS detection (tested)
+  Payment_Reference.php                      – Pure: MerchantReference build/parse, IRIS detection (tested)
+  Phone_Numbers.php                          – Pure: Greek phone → 3DS MobilePhone/HomePhone routing (tested)
+  Currency_Codes.php                         – Pure: ISO 4217 alpha → numeric CurrencyCode (tested)
+  Credentials.php                            – Pure: password stored as "md5:<digest>" (tested)
+  Health.php                                 – ResultCode 100 admin notice; daily reconciliation cron (`piraeusbank_reconcile`) + ticket-table pruning
+  Diagnostics.php                            – Settings-page diagnostics: callback URLs, outbound IP, Cloudflare, "Test callback URL" AJAX
+assets/js/
+  admin-settings.js                          – Copy buttons + callback test on the gateway settings page
+uninstall.php                                – Drops the tickets table, options, transients, cron
 tests/
   run.php                                    – Zero-dependency tests: `php tests/run.php`
 assets/js/blocks/
@@ -39,6 +47,8 @@ languages/
 **Payment flow** — redirect to Piraeus paycenter → bank POSTs back to `/?wc-api=WC_Piraeusbank_Gateway` → `check_piraeusbank_response()` handles success / fail / cancel. Always a Sale (`RequestType 02`); pre-authorisation was removed in 3.5.0 (no capture step existed, yet orders were marked paid).
 
 **Callback authentication** — the bank POSTs cross-site, so the WC session cookie is **not** sent (SameSite=Lax): never use the session to validate a callback. Instead the `MerchantReference` is `{order_id}-{12 random chars}` (`Payment_Reference`), stored with its ticket in `wp_piraeusbank_transactions.merch_ref`; a callback must match a stored row, the order must use this gateway, and a paid order is never changed. A HashKey that fails verification leaves the order unchanged (note only). Declines on the fail URL usually carry an empty HashKey, so the reference secret is their only authentication. Plain order-ID references (pre-3.5.0) are accepted for 24h only. IRIS `ResponseCode 09` = transfer pending → on-hold, never failed.
+
+**Customer messages** — callbacks store the message in `_piraeusbank_message` order meta (never `wc_add_notice()`: the session is not available in the bank's POST); `Application::piraeusbank_message()` shows it on the order-received page, or on the order's pay page where declined payments are redirected (default return-page setting). A MerchantReference starting `WAFTEST-` is the settings-page callback test: the handler answers with the `X-Piraeusbank-Callback: reached` header and touches nothing.
 
 **SOAP** — all bank communication uses PHP's SOAP extension. Server must have it installed.
 
@@ -73,12 +83,9 @@ These have been identified but not yet fixed — pick them up before adding new 
 - **`functions.php` is dead code** — `piraeusbank_message()` there is a duplicate of `Application::piraeusbank_message()` and the file is never `require`d. Safe to delete.
 - **`Application::declare_transactions()`** — calls `FeaturesUtil::declare_compatibility()` with `$wpdb->prefix . 'piraeusbank_transactions'` as the feature ID, which is not a valid WooCommerce feature. Investigate and remove or correct.
 - **`validate_fields()` skips Block Checkout** — returns `false` immediately on REST requests without checking if fields are actually present, meaning Block Checkout never validates required billing fields.
-- **`CurrencyCode` hardcoded as `'978'` (EUR)** — `generate_piraeusbank_form()` always sends EUR regardless of WooCommerce currency setting. Should map `get_woocommerce_currency()` to ISO 4217 numeric code.
-- **`admin_options()` uses raw cURL** — fetches server IP via `curl_init()` instead of `wp_remote_get()`, bypassing WordPress HTTP API and proxy settings.
-- **No `uninstall.php`** — `wp_piraeusbank_transactions` table and all plugin options persist in the database after uninstallation.
 - **Installments logic duplicated** — the `pb_installments_variation` parsing loop appears in `payment_fields()`, `Checkout_Block::calculate_max_installments()`. Should be extracted to a single method on the gateway.
 
 ## Security notes
 
-- Bank password is stored plaintext in WP options. Could be stored as its MD5 instead (that digest is what the SOAP call sends); not done yet.
+- Bank password: only `md5:<digest>` is stored (the digest is what the SOAP call sends); plain values from older versions are converted in the gateway constructor. The settings field (`pb_secret` type) always renders empty.
 - Success responses are verified via SHA-256 / HMAC-SHA256 of the attempt's transaction ticket before any order status change; see *Callback authentication* above for the rest.

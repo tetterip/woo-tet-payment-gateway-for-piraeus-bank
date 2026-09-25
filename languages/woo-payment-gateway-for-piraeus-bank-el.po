@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Peiraus Bank WooCommerce Payment Gateway\n"
-"POT-Creation-Date: 2024-11-26 14:24+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-25 15:42+0300\n"
 "PO-Revision-Date: 2024-11-26 14:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,16 +14,232 @@ msgstr ""
 "X-Generator: Poedit 3.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: classes/Checkout_Block.php:32 classes/WC_Piraeusbank_Gateway.php:126
+#: classes/Application.php:91
+msgid "Ammochostos"
+msgstr "Αμμόχωστος"
+
+#: classes/Application.php:92
+msgid "Keryneia"
+msgstr "Κερύvεια"
+
+#: classes/Application.php:93
+msgid "Larnaka"
+msgstr "Λάρνακα"
+
+#: classes/Application.php:94
+msgid "Lefkosia"
+msgstr "Λευκωσία"
+
+#: classes/Application.php:95
+msgid "Lemesos"
+msgstr "Λεμεσός"
+
+#: classes/Application.php:96
+msgid "Pafos"
+msgstr "Πάφος"
+
+#: classes/Application.php:99
+msgid "Baden-Württemberg"
+msgstr ""
+
+#: classes/Application.php:100
+msgid "Bayern"
+msgstr ""
+
+#: classes/Application.php:101
+msgid "Berlin"
+msgstr ""
+
+#: classes/Application.php:102
+msgid "Brandenburg"
+msgstr ""
+
+#: classes/Application.php:103
+msgid "Bremen"
+msgstr ""
+
+#: classes/Application.php:104
+msgid "Hamburg"
+msgstr ""
+
+#: classes/Application.php:105
+msgid "Hessen"
+msgstr ""
+
+#: classes/Application.php:106
+msgid "Mecklenburg-Vorpommern"
+msgstr ""
+
+#: classes/Application.php:107
+msgid "Niedersachsen"
+msgstr ""
+
+#: classes/Application.php:108
+msgid "Nordrhein-Westfalen"
+msgstr ""
+
+#: classes/Application.php:109
+msgid "Rheinland-Pfalz"
+msgstr ""
+
+#: classes/Application.php:110
+msgid "Saarland"
+msgstr ""
+
+#: classes/Application.php:111
+msgid "Sachsen"
+msgstr ""
+
+#: classes/Application.php:112
+msgid "Sachsen-Anhalt"
+msgstr ""
+
+#: classes/Application.php:113
+msgid "Schleswig-Holstein"
+msgstr ""
+
+#: classes/Application.php:114
+msgid "Thüringen"
+msgstr ""
+
+#: classes/Checkout_Block.php:55 classes/WC_Piraeusbank_Gateway.php:149
 msgid "Cardholder Name"
 msgstr "Όνομα Κατόχου Κάρτας (λατινικούς χαρακτήρες)"
 
-#: classes/WC_Piraeusbank_Gateway.php:36
+#: classes/Checkout_Block.php:78
+msgid "Installments"
+msgstr "Δόσεις"
+
+#: classes/Checkout_Block.php:119 classes/WC_Piraeusbank_Gateway.php:545
+#: classes/WC_Piraeusbank_Gateway_Checkout_Block.php:90
+#: classes/WC_Piraeusbank_Gateway_Checkout_Block.php:98
+msgid "Without installments"
+msgstr "Χωρίς δόσεις"
+
+#: classes/Diagnostics.php:134
+msgid "You are not allowed to do this."
+msgstr "Δεν έχετε δικαίωμα για αυτή την ενέργεια."
+
+#. translators: %s: error message
+#: classes/Diagnostics.php:186
+#, php-format
+msgid ""
+"Your server could not connect to its own URL (%s). Many hosts block such "
+"loopback requests, so this test cannot tell whether a firewall blocks the "
+"bank. Ask your host, or make a test payment."
+msgstr ""
+"Ο διακομιστής σας δεν μπόρεσε να συνδεθεί στη δική του διεύθυνση (%s). "
+"Πολλοί πάροχοι φιλοξενίας μπλοκάρουν τέτοια αιτήματα προς τον εαυτό τους, "
+"οπότε ο έλεγχος δεν μπορεί να δείξει αν κάποιο firewall μπλοκάρει την "
+"τράπεζα. Ρωτήστε τον πάροχό σας ή κάντε μια δοκιμαστική πληρωμή."
+
+#: classes/Diagnostics.php:196
+msgid "OK: the test response reached the plugin."
+msgstr "OK: η δοκιμαστική απάντηση έφτασε στο plugin."
+
+#. translators: %d: HTTP status code
+#: classes/Diagnostics.php:205
+#, php-format
+msgid ""
+"Blocked: the request did not reach the plugin (HTTP %d). A firewall "
+"(ModSecurity, Imunify360, BitNinja, LiteSpeed, a security plugin or a CDN) "
+"is probably intercepting it. Ask your host to whitelist this URL for the "
+"bank's responses; do not disable the firewall for the whole site."
+msgstr ""
+"Μπλοκαρίστηκε: το αίτημα δεν έφτασε στο plugin (HTTP %d). Μάλλον το σταματά "
+"κάποιο firewall (ModSecurity, Imunify360, BitNinja, LiteSpeed, ένα plugin "
+"ασφαλείας ή ένα CDN). Ζητήστε από τον πάροχό σας να επιτρέψει αυτό το URL "
+"για τις απαντήσεις της τράπεζας· μην απενεργοποιήσετε το firewall για όλο το "
+"site."
+
+#: classes/Diagnostics.php:227
+msgid "Testing…"
+msgstr "Γίνεται έλεγχος…"
+
+#: classes/Diagnostics.php:228
+msgid "Copied"
+msgstr "Αντιγράφηκε"
+
+#: classes/Diagnostics.php:229
+msgid "The test could not be run. Reload the page and try again."
+msgstr ""
+"Ο έλεγχος δεν μπόρεσε να εκτελεστεί. Ανανεώστε τη σελίδα και δοκιμάστε ξανά."
+
+#: classes/Health.php:85
+msgid "Piraeus Bank: card payments are failing."
+msgstr "Τράπεζα Πειραιώς: οι πληρωμές με κάρτα αποτυγχάνουν."
+
+#. translators: %s: date and time
+#: classes/Health.php:89
+#, php-format
+msgid ""
+"Since %s the bank has rejected the Username or Password of the Ticketing Web "
+"Service (ResultCode 100), so no customer can pay by card."
+msgstr ""
+"Από %s η τράπεζα απορρίπτει το Username ή το Password της υπηρεσίας "
+"Ticketing (ResultCode 100), οπότε κανένας πελάτης δεν μπορεί να πληρώσει με "
+"κάρτα."
+
+#. translators: %s: error message from the bank
+#: classes/Health.php:97
+#, php-format
+msgid "Bank response: \"%s\"."
+msgstr "Απάντηση τράπεζας: «%s»."
+
+#: classes/Health.php:102
+msgid "Check the credentials"
+msgstr "Έλεγχος στοιχείων σύνδεσης"
+
+#: classes/Health.php:103
+msgid ""
+"This warning disappears automatically after the next successful payment "
+"attempt."
+msgstr ""
+"Η προειδοποίηση εξαφανίζεται αυτόματα μετά την επόμενη επιτυχημένη απόπειρα "
+"πληρωμής."
+
+#. translators: %s: comma-separated MerchantReference values
+#: classes/Health.php:153
+#, php-format
+msgid ""
+"Piraeus Bank: the customer was sent to the bank but no response came back "
+"(MerchantReference: %s). This is usually an abandoned payment, but it can "
+"also be an approved payment whose response was lost. Check these references "
+"in the Piraeus Bank AdminTool; if one was approved, complete the order "
+"manually."
+msgstr ""
+"Τράπεζα Πειραιώς: ο πελάτης στάλθηκε στην τράπεζα αλλά δεν ήρθε απάντηση "
+"(MerchantReference: %s). Συνήθως πρόκειται για εγκαταλελειμμένη πληρωμή, "
+"μπορεί όμως να είναι και εγκεκριμένη πληρωμή της οποίας η απάντηση χάθηκε. "
+"Ελέγξτε αυτά τα references στο AdminTool της Τράπεζας Πειραιώς· αν κάποιο "
+"εγκρίθηκε, ολοκληρώστε την παραγγελία χειροκίνητα."
+
+#: classes/Health.php:194
+msgid "Piraeus Bank: payments without a bank response"
+msgstr "Τράπεζα Πειραιώς: πληρωμές χωρίς απάντηση από την τράπεζα"
+
+#: classes/Health.php:195
+msgid ""
+"These orders were sent to the bank but no response came back. Most are "
+"abandoned payments, but check them in the Piraeus Bank AdminTool: if one was "
+"approved, complete it manually. The order note lists the references to look "
+"up."
+msgstr ""
+"Αυτές οι παραγγελίες στάλθηκαν στην τράπεζα αλλά δεν ήρθε απάντηση. Οι "
+"περισσότερες είναι εγκαταλελειμμένες πληρωμές, ελέγξτε τες όμως στο "
+"AdminTool της Τράπεζας Πειραιώς: αν κάποια εγκρίθηκε, ολοκληρώστε τη "
+"χειροκίνητα. Η σημείωση της παραγγελίας αναφέρει τα references που πρέπει να "
+"αναζητήσετε."
+
+#: classes/Health.php:197
+msgid "Dismiss"
+msgstr "Απόκρυψη"
+
+#: classes/WC_Piraeusbank_Gateway.php:57
 msgid ""
 "Piraeus bank Payment Gateway allows you to accept payment through various "
 "channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards On "
@@ -32,16 +249,47 @@ msgstr ""
 "καρτών Maestro, Mastercard, American Express, Diners και Visa στο "
 "Woocommerce ηλεκτρονικό κατάστημά σας."
 
-#: classes/WC_Piraeusbank_Gateway.php:127
+#: classes/WC_Piraeusbank_Gateway.php:150
 msgid "Card holder name is optional by Piraeus Bank for validation"
-msgstr "Το όνομα κατόχου κάρτας είναι προαιρετικό από την Τράπεζα Πειραιώς για επικύρωση"
+msgstr ""
+"Το όνομα κατόχου κάρτας είναι προαιρετικό από την Τράπεζα Πειραιώς για "
+"επικύρωση"
 
-#: classes/WC_Piraeusbank_Gateway.php:153
-#: classes/WC_Piraeusbank_Gateway.php:212
+#: classes/WC_Piraeusbank_Gateway.php:175
+msgid "Website URL"
+msgstr "URL ιστοσελίδας"
+
+#: classes/WC_Piraeusbank_Gateway.php:176
+msgid "Referrer URL"
+msgstr "Referrer URL"
+
+#: classes/WC_Piraeusbank_Gateway.php:177
+msgid "Success page"
+msgstr "Σελίδα επιτυχίας (Success)"
+
+#: classes/WC_Piraeusbank_Gateway.php:178
+msgid "Failure page"
+msgstr "Σελίδα αποτυχίας (Failure)"
+
+#: classes/WC_Piraeusbank_Gateway.php:179
+msgid "Backlink page"
+msgstr "Σελίδα επιστροφής (Backlink)"
+
+#: classes/WC_Piraeusbank_Gateway.php:186
+#: classes/WC_Piraeusbank_Gateway.php:201
+msgid "Response method"
+msgstr "Μέθοδος απάντησης"
+
+#: classes/WC_Piraeusbank_Gateway.php:188
+msgid "Server IP"
+msgstr "IP διακομιστή"
+
+#: classes/WC_Piraeusbank_Gateway.php:191
+#: classes/WC_Piraeusbank_Gateway.php:335
 msgid "Piraeus Bank Gateway"
 msgstr "Με κάρτα μέσω Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:154
+#: classes/WC_Piraeusbank_Gateway.php:192
 msgid ""
 "Piraeus Bank Gateway allows you to accept payment through various channels "
 "such as Maestro, Mastercard, AMex cards, Diners  and Visa cards."
@@ -49,25 +297,132 @@ msgstr ""
 "Το σύστημα πληρωμών της Πειραιώς σας επιτρέπει να λαμβάνετε πληρωμές μέσω "
 "καρτών Maestro, Mastercard, American Express, Diners και Visa."
 
-#: classes/WC_Piraeusbank_Gateway.php:161
+#: classes/WC_Piraeusbank_Gateway.php:195
 msgid "Technical data to be submitted to Piraeus Bank"
 msgstr "Στοιχεία για διασύνδεση με την τράπεζα"
 
-#: classes/WC_Piraeusbank_Gateway.php:162
+#: classes/WC_Piraeusbank_Gateway.php:196
 msgid ""
-"The data to be submitted to Piraeus Bank(<a href=\"mailto:"
-"OnlineServices@epayworldwide.gr\">OnlineServices@epayworldwide.gr</a>) in order "
-"to provide "
-"the necessary technical info (test/live account) for transactions are as "
-"follows"
+"The data to be submitted to Piraeus Bank(<a "
+"href=\"mailto:OnlineServices@epayworldwide.gr\">OnlineServices@epayworldwide.gr</"
+"a>) in order to provide the necessary technical info (test/live account) for "
+"transactions are as follows"
 msgstr ""
-"Οι πληροφορίες που πρέπει να σταλούν στην Τράπεζα Πειραιώς (<a href=\"mailto:"
-"OnlineServices@epayworldwide.gr\">OnlineServices@epayworldwide.gr</a>) "
-"προκειμένου να "
-"δοθούν οι απαραίτητες τεχνικές πληροφορίες (test/live account) για να γίνουν "
-"συναλλαγές, είναι οι εξής"
+"Οι πληροφορίες που πρέπει να σταλούν στην Τράπεζα Πειραιώς (<a "
+"href=\"mailto:OnlineServices@epayworldwide.gr\">OnlineServices@epayworldwide.gr</"
+"a>) προκειμένου να δοθούν οι απαραίτητες τεχνικές πληροφορίες (test/live "
+"account) για να γίνουν συναλλαγές, είναι οι εξής"
 
-#: classes/WC_Piraeusbank_Gateway.php:184
+#: classes/WC_Piraeusbank_Gateway.php:201
+msgid "preferred: POST"
+msgstr "προτιμάται: POST"
+
+#: classes/WC_Piraeusbank_Gateway.php:203
+msgid "Server IP (outbound, the value the bank needs)"
+msgstr "IP διακομιστή (εξερχόμενη, αυτή που χρειάζεται η τράπεζα)"
+
+#: classes/WC_Piraeusbank_Gateway.php:207
+msgid ""
+"could not be determined. Run \"curl -4 https://api.ipify.org\" on the server "
+"over SSH, or ask your host for the server's outgoing IP address."
+msgstr ""
+"δεν ήταν δυνατό να βρεθεί. Εκτελέστε «curl -4 https://api.ipify.org» στον "
+"διακομιστή μέσω SSH ή ζητήστε από τον πάροχό σας την εξερχόμενη IP του "
+"διακομιστή."
+
+#: classes/WC_Piraeusbank_Gateway.php:212
+msgid "Website IP (not the value for the bank)"
+msgstr "IP ιστοσελίδας (όχι αυτή για την τράπεζα)"
+
+#: classes/WC_Piraeusbank_Gateway.php:212
+msgid ""
+"Visitors reach the site on this address, but requests to the bank leave from "
+"the outbound IP above. Registering the wrong one makes every payment fail."
+msgstr ""
+"Οι επισκέπτες φτάνουν στο site σε αυτή τη διεύθυνση, όμως τα αιτήματα προς "
+"την τράπεζα φεύγουν από την εξερχόμενη IP παραπάνω. Αν δηλωθεί η λάθος, κάθε "
+"πληρωμή αποτυγχάνει."
+
+#: classes/WC_Piraeusbank_Gateway.php:216
+msgid ""
+"An HTTP proxy is configured below: requests to the bank go through it, so "
+"the bank needs the proxy's outgoing IP address."
+msgstr ""
+"Παρακάτω έχει ρυθμιστεί HTTP proxy: τα αιτήματα προς την τράπεζα περνούν από "
+"αυτόν, οπότε η τράπεζα χρειάζεται την εξερχόμενη IP του proxy."
+
+#: classes/WC_Piraeusbank_Gateway.php:221
+msgid "Copy all to clipboard"
+msgstr "Αντιγραφή όλων"
+
+#: classes/WC_Piraeusbank_Gateway.php:222
+msgid ""
+"* Note: the Success, Failure and Backlink URLs are created automatically by "
+"the plugin; you do not need to create any extra page."
+msgstr ""
+"* Σημείωση: τα URLs Success, Failure και Backlink δημιουργούνται αυτόματα "
+"από το plugin· δεν χρειάζεται να δημιουργήσετε κάποια επιπλέον σελίδα."
+
+#: classes/WC_Piraeusbank_Gateway.php:239
+msgid "Callback diagnostics"
+msgstr "Διαγνωστικός έλεγχος callback"
+
+#: classes/WC_Piraeusbank_Gateway.php:240
+msgid ""
+"Sends a test declined-payment response from your server to its own Success "
+"and Failure URLs and checks that it reaches the plugin. A host firewall that "
+"blocks the bank's responses leaves orders in \"Pending payment\". No order "
+"is created or changed."
+msgstr ""
+"Στέλνει από τον διακομιστή σας μια δοκιμαστική απάντηση απορριφθείσας "
+"πληρωμής στα δικά του URLs Success και Failure και ελέγχει ότι φτάνει στο "
+"plugin. Ένα firewall του παρόχου που μπλοκάρει τις απαντήσεις της τράπεζας "
+"αφήνει τις παραγγελίες σε «Εκκρεμεί πληρωμή». Δεν δημιουργείται ούτε αλλάζει "
+"καμία παραγγελία."
+
+#: classes/WC_Piraeusbank_Gateway.php:241
+msgid "Test callback URL"
+msgstr "Έλεγχος callback URL"
+
+#: classes/WC_Piraeusbank_Gateway.php:247
+msgid "This site is served through Cloudflare."
+msgstr "Αυτό το site εξυπηρετείται μέσω Cloudflare."
+
+#: classes/WC_Piraeusbank_Gateway.php:248
+msgid ""
+"The bank's responses reach the site through Cloudflare, so Cloudflare's WAF, "
+"Bot Fight Mode or a challenge page can block them. Add a WAF skip rule for "
+"the path /wc-api/WC_Piraeusbank_Gateway. If Euronet / Piraeus Bank asks for "
+"the addresses your site uses, give them the Cloudflare ranges below."
+msgstr ""
+"Οι απαντήσεις της τράπεζας φτάνουν στο site μέσω Cloudflare, οπότε το WAF, "
+"το Bot Fight Mode ή μια σελίδα challenge του Cloudflare μπορεί να τις "
+"μπλοκάρει. Προσθέστε έναν κανόνα WAF skip για τη διαδρομή /wc-api/"
+"WC_Piraeusbank_Gateway. Αν η Euronet / Τράπεζα Πειραιώς ζητήσει τις "
+"διευθύνσεις που χρησιμοποιεί το site σας, δώστε τους τα εύρη του Cloudflare "
+"παρακάτω."
+
+#: classes/WC_Piraeusbank_Gateway.php:251
+msgid "Cloudflare IPv4 ranges"
+msgstr "Εύρη IPv4 του Cloudflare"
+
+#: classes/WC_Piraeusbank_Gateway.php:253
+msgid "Copy to clipboard"
+msgstr "Αντιγραφή"
+
+#: classes/WC_Piraeusbank_Gateway.php:255
+msgid ""
+"The Cloudflare IP list could not be downloaded; see https://"
+"www.cloudflare.com/ips/."
+msgstr ""
+"Η λίστα IP του Cloudflare δεν μπόρεσε να κατέβει· δείτε https://"
+"www.cloudflare.com/ips/."
+
+#: classes/WC_Piraeusbank_Gateway.php:283
+msgid "Saved. Leave blank to keep it."
+msgstr "Αποθηκευμένο. Αφήστε το κενό για να παραμείνει."
+
+#: classes/WC_Piraeusbank_Gateway.php:313
 msgid ""
 "<strong>SOAP have to be enabled in your Server/Hosting</strong>, it is "
 "required for this plugin to work properly!"
@@ -75,104 +430,43 @@ msgstr ""
 "<strong> Θα πρέπει να έχετε ενεργοποιημένο το SOAP στον Server/Hosting σας</"
 "strong>, είναι απαραίτητο για να λειτουργήσει σωστά το plugin!"
 
-#: classes/WC_Piraeusbank_Gateway.php
-msgid ""
-"Piraeus Bank: a payment response arrived whose HashKey could not be "
-"verified. The order status was not changed. Check the transaction in the "
-"Piraeus Bank AdminTool before fulfilling this order."
-msgstr ""
-"Τράπεζα Πειραιώς: ήρθε απάντηση πληρωμής με HashKey που δεν επαληθεύτηκε. Η "
-"κατάσταση της παραγγελίας δεν άλλαξε. Ελέγξτε τη συναλλαγή στο AdminTool της "
-"Τράπεζας Πειραιώς πριν εκτελέσετε την παραγγελία."
-
-#: classes/WC_Piraeusbank_Gateway.php
-msgid ""
-"Piraeus Bank: a failure response arrived whose HashKey could not be "
-"verified. The order status was not changed."
-msgstr ""
-"Τράπεζα Πειραιώς: ήρθε απάντηση αποτυχίας με HashKey που δεν επαληθεύτηκε. Η "
-"κατάσταση της παραγγελίας δεν άλλαξε."
-
-#: classes/WC_Piraeusbank_Gateway.php
-#, php-format
-msgid ""
-"Piraeus Bank: the IRIS payment was started but not yet confirmed "
-"(ResponseCode 09). It may still be completed. Check it in the Piraeus Bank "
-"AdminTool before shipping or cancelling. Support Reference ID: %s"
-msgstr ""
-"Τράπεζα Πειραιώς: η πληρωμή IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα "
-"(ResponseCode 09). Μπορεί να ολοκληρωθεί αργότερα. Ελέγξτε την στο AdminTool "
-"της Τράπεζας Πειραιώς πριν αποστείλετε ή ακυρώσετε την παραγγελία. Support "
-"Reference ID: %s"
-
-#: classes/WC_Piraeusbank_Gateway.php
-msgid ""
-"Your IRIS payment has been started but not yet confirmed by the bank. Please "
-"do not pay again. We will update your order as soon as the payment is "
-"confirmed."
-msgstr ""
-"Η πληρωμή σας μέσω IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα από την "
-"τράπεζα. Παρακαλούμε μην πληρώσετε ξανά. Θα ενημερώσουμε την παραγγελία σας "
-"μόλις επιβεβαιωθεί η πληρωμή."
-
-#: classes/WC_Piraeusbank_Gateway.php
-msgid "Piraeus Bank: the customer cancelled the payment on the bank page."
-msgstr "Τράπεζα Πειραιώς: ο πελάτης ακύρωσε την πληρωμή στη σελίδα της τράπεζας."
-
-#: classes/WC_Piraeusbank_Gateway.php
-msgid "Your payment was cancelled. You can try again."
-msgstr "Η πληρωμή σας ακυρώθηκε. Μπορείτε να δοκιμάσετε ξανά."
-
-#~ msgid ""
-#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
-#~ "gradually abolish the Preauthorized Payment Service for all merchants, "
-#~ "beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> You are "
-#~ "highly recommended to disable the preAuthorized Payment Service as soon as "
-#~ "possible."
-#~ msgstr ""
-#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
-#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
-#~ "διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
-#~ "που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
-#~ "απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν."
-
-#: classes/WC_Piraeusbank_Gateway.php:200
+#: classes/WC_Piraeusbank_Gateway.php:323
 msgid "Enable/Disable"
 msgstr "Ενεργοποίηση/Απενεργοποίηση"
 
-#: classes/WC_Piraeusbank_Gateway.php:202
+#: classes/WC_Piraeusbank_Gateway.php:325
 msgid "Enable Piraeus Bank Gateway"
 msgstr "Ενεργοποίηση συστήματος πληρωμών Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:203
+#: classes/WC_Piraeusbank_Gateway.php:326
 msgid "Enable or disable the gateway."
 msgstr "Ενεργοποίηση ή απενεργοποίηση συστήματος πληρωμών."
 
-#: classes/WC_Piraeusbank_Gateway.php:208
+#: classes/WC_Piraeusbank_Gateway.php:331
 msgid "Title"
 msgstr "Τίτλος"
 
-#: classes/WC_Piraeusbank_Gateway.php:210
+#: classes/WC_Piraeusbank_Gateway.php:333
 msgid "This controls the title which the user sees during checkout."
 msgstr "Ελέγχει το τίτλο που εμφανίζεται στο χρήστη κατά τη πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:215
+#: classes/WC_Piraeusbank_Gateway.php:338
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: classes/WC_Piraeusbank_Gateway.php:217
+#: classes/WC_Piraeusbank_Gateway.php:340
 msgid "This controls the description which the user sees during checkout."
 msgstr "Ελέγχει την περιγραφή που εμφανίζεται στον χρήστη κατά τη πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:218
+#: classes/WC_Piraeusbank_Gateway.php:341
 msgid "Pay Via Piraeus Bank - Pay by Card or IRIS."
 msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς - Πληρωμή με κάρτα ή IRIS."
 
-#: classes/WC_Piraeusbank_Gateway.php:221
+#: classes/WC_Piraeusbank_Gateway.php:344
 msgid "Display the logo of Piraeus Bank"
 msgstr "Εμφάνιση του λογότυπου της Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:223
+#: classes/WC_Piraeusbank_Gateway.php:346
 msgid ""
 "Enable to display the logo of Piraeus Bank next to the title which the user "
 "sees during checkout."
@@ -180,51 +474,56 @@ msgstr ""
 "Επιλέξτε για να εμφανίζεται το λογότυπο της τράπεζας δίπλα από το κείμενο "
 "πληρωμής με κάρτα, κατά την πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:227
+#: classes/WC_Piraeusbank_Gateway.php:350
 msgid "Piraeus Bank Merchant ID"
 msgstr "Merchant ID Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:229
+#: classes/WC_Piraeusbank_Gateway.php:352
 msgid "Enter Your Piraeus Bank Merchant ID"
 msgstr "Εισάγεται το Merchant ID από τη Τράπεζα Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:234
+#: classes/WC_Piraeusbank_Gateway.php:357
 msgid "Piraeus Bank Acquirer ID"
 msgstr "Acquirer ID Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:236
+#: classes/WC_Piraeusbank_Gateway.php:359
 msgid "Enter Your Piraeus Bank Acquirer ID"
 msgstr "Εισάγεται το Acquirer ID της Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:241
+#: classes/WC_Piraeusbank_Gateway.php:364
 msgid "Piraeus Bank POS ID"
 msgstr "POS ID Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:243
+#: classes/WC_Piraeusbank_Gateway.php:366
 msgid "Enter your Piraeus Bank POS ID"
 msgstr "Εισάγεται το POS ID της Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:248
+#: classes/WC_Piraeusbank_Gateway.php:371
 msgid "Piraeus Bank Username"
 msgstr "Username Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:250
+#: classes/WC_Piraeusbank_Gateway.php:373
 msgid "Enter your Piraeus Bank Username"
 msgstr "Εισάγεται το Username της Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:255
+#: classes/WC_Piraeusbank_Gateway.php:378
 msgid "Piraeus Bank Password"
 msgstr "Password Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:257
-msgid "Enter your Piraeus Bank Password"
-msgstr "Εισάγεται το Password της Τράπεζας Πειραιώς"
+#: classes/WC_Piraeusbank_Gateway.php:380
+msgid ""
+"Enter your Piraeus Bank Password. Only a hash of it is stored, so the field "
+"always appears empty: leave it blank to keep the saved password."
+msgstr ""
+"Εισάγετε τον κωδικό της Τράπεζας Πειραιώς. Αποθηκεύεται μόνο ένα hash του, "
+"γι' αυτό το πεδίο εμφανίζεται πάντα κενό: αφήστε το κενό για να κρατήσετε "
+"τον αποθηκευμένο κωδικό."
 
-#: classes/WC_Piraeusbank_Gateway.php:262
+#: classes/WC_Piraeusbank_Gateway.php:385
 msgid "HTTP Proxy Hostname"
 msgstr "HTTP Proxy Hostname"
 
-#: classes/WC_Piraeusbank_Gateway.php:264
+#: classes/WC_Piraeusbank_Gateway.php:387
 msgid ""
 "Used when your server is not behind a static IP. Leave blank for normal HTTP "
 "connection."
@@ -232,58 +531,39 @@ msgstr ""
 "Συμπληρώστε το hostname του Proxy Server. Χρησιμοποιείται για websites που "
 "δεν έχουν στατική IP. Αφήστε κενό για κανονική HTTP σύνδεση."
 
-#: classes/WC_Piraeusbank_Gateway.php:269
+#: classes/WC_Piraeusbank_Gateway.php:392
 msgid "HTTP Proxy Port"
 msgstr "HTTP Proxy Port"
 
-#: classes/WC_Piraeusbank_Gateway.php:271
+#: classes/WC_Piraeusbank_Gateway.php:394
 msgid "Used with Proxy Host."
 msgstr "Χρησιμοποιείται σε συνδυασμό με το Proxy Host."
 
-#: classes/WC_Piraeusbank_Gateway.php:276
+#: classes/WC_Piraeusbank_Gateway.php:399
 msgid "HTTP Proxy Login Username"
 msgstr "HTTP Proxy Login Username"
 
-#: classes/WC_Piraeusbank_Gateway.php:278
+#: classes/WC_Piraeusbank_Gateway.php:401
 msgid "Used with Proxy Host. Leave blank for anonymous connection."
 msgstr ""
 "Χρησιμοποιείται σε συνδυασμό με το Proxy Host. Αφήστε κενό για ανώνυμη "
 "σύνδεση."
 
-#: classes/WC_Piraeusbank_Gateway.php:283
+#: classes/WC_Piraeusbank_Gateway.php:406
 msgid "HTTP Proxy Login Password"
 msgstr "HTTP Proxy Login Password"
 
-#: classes/WC_Piraeusbank_Gateway.php:285
+#: classes/WC_Piraeusbank_Gateway.php:408
 msgid " Used with Proxy Host. Leave blank for anonymous connection."
 msgstr ""
 " Χρησιμοποιείται σε συνδυασμό με το Proxy Host. Αφήστε κενό για ανώνυμη "
 "σύνδεση."
 
-#~ msgid "Pre-Authorize"
-#~ msgstr "Προ-Έγκριση"
-
-#~ msgid "Enable to capture preauthorized payments"
-#~ msgstr "Ενεργοποιήστε για να συλλέγεται προεγκεκριμένες πληρωμές"
-
-#~ msgid ""
-#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it will "
-#~ "gradually abolish the Preauthorized Payment Service for all merchants, "
-#~ "beginning from the ones obtained MIDs from 29/1/2019 onwards.<br /> Default "
-#~ "payment method is Purchase, enable for Pre-Authorized payments. You will "
-#~ "then need to accept them from Piraeus Bank AdminTool"
-#~ msgstr ""
-#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
-#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που ήταν "
-#~ "διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί στα MID "
-#~ "που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε να "
-#~ "απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο δυνατόν"
-
-#: classes/WC_Piraeusbank_Gateway.php:297
+#: classes/WC_Piraeusbank_Gateway.php:413
 msgid "Return page URL <br />(Successful or Failed Transactions)"
 msgstr "Σελίδα Επιστροφής <br />(Επιτυχείς ή Αποτυχημένες Συναλλαγές)"
 
-#: classes/WC_Piraeusbank_Gateway.php:300
+#: classes/WC_Piraeusbank_Gateway.php:416
 msgid ""
 "We recommend you to select the default “Thank You Page”, in order to "
 "automatically serve both successful and failed transactions, with the latter "
@@ -298,11 +578,11 @@ msgstr ""
 "πρέπει εσείς να προσθέσετε χειροκίνητα κώδικα στη σελίδα για να λειτουργεί "
 "σωστά."
 
-#: classes/WC_Piraeusbank_Gateway.php:304
+#: classes/WC_Piraeusbank_Gateway.php:420
 msgid "Maximum number of installments regardless of the total order amount"
 msgstr "Μέγιστες άτοκες δόσεις ανεξαρτήτως ποσού παραγγελίας"
 
-#: classes/WC_Piraeusbank_Gateway.php:307
+#: classes/WC_Piraeusbank_Gateway.php:423
 msgid ""
 "1 to 24 Installments,1 for one time payment. You must contact Piraeus Bank "
 "first<br /> If you have filled the \"Max Number of installments depending on "
@@ -313,11 +593,11 @@ msgstr ""
 "συμπλήρώσει το πεδίο “Μέγιστες άτοκες δόσεις ανάλογα με το ποσό "
 "παραγγελίας”, η τιμή του παρόντος πεδίου θα αγνοηθεί."
 
-#: classes/WC_Piraeusbank_Gateway.php:310
+#: classes/WC_Piraeusbank_Gateway.php:426
 msgid "Maximum number of installments depending on the total order amount"
 msgstr "Μέγιστες άτοκες δόσεις ανάλογα με το ποσό παραγγελίας"
 
-#: classes/WC_Piraeusbank_Gateway.php:312
+#: classes/WC_Piraeusbank_Gateway.php:428
 msgid ""
 "Example 80:2, 160:4, 300:8</br> total order greater or equal to 80 -> allow "
 "2 installments, total order greater or equal to 160 -> allow 4 installments, "
@@ -332,17 +612,17 @@ msgstr ""
 "Αφήστε κενό το πεδίο εάν δεν θέλετε να περιορίσετε τον αριθμό των δόσεων "
 "ανάλογα με το ποσό της παραγγελία."
 
-#: classes/WC_Piraeusbank_Gateway.php:315
+#: classes/WC_Piraeusbank_Gateway.php:431
 msgid "Enable Cardholder Name Field"
 msgstr "Ενεργοποίηση πεδίου για Όνομα Κατόχου Κάρτας"
 
-#: classes/WC_Piraeusbank_Gateway.php:317
+#: classes/WC_Piraeusbank_Gateway.php:433
 msgid "Enabling this field allows customers to insert a cardholder name"
 msgstr ""
 "Η ενεργοποίηση αυτού του πεδίου επιτρέπει στους πελάτες να εισάγουν το όνομα "
 "κατόχου κάρτας"
 
-#: classes/WC_Piraeusbank_Gateway.php:319
+#: classes/WC_Piraeusbank_Gateway.php:435
 msgid ""
 "According to Piraeus bank’s technical requirements related to 3D secure and "
 "SCA, the cardholder’s name must be sent before the customer is redirected to "
@@ -358,16 +638,16 @@ msgstr ""
 "της παραγγελίας, με το ρίσκο να υπάρξουν απορρίψεις συναλλαγών από την "
 "τράπεζα σε περίπτωση ελέγχου της εγκυρότητας του πεδίου."
 
-#: classes/WC_Piraeusbank_Gateway.php:322
+#: classes/WC_Piraeusbank_Gateway.php:438
 msgid "Enable Debug mode"
 msgstr "Ενεργοποίηση λειτουργίας εντοπισμού σφαλμάτων"
 
-#: classes/WC_Piraeusbank_Gateway.php:324
+#: classes/WC_Piraeusbank_Gateway.php:440
 msgid "Enabling this will log certain information"
 msgstr ""
 "Η ενεργοποίηση αυτής της δυνατότητας θα καταγράψει ορισμένες πληροφορίες"
 
-#: classes/WC_Piraeusbank_Gateway.php:326
+#: classes/WC_Piraeusbank_Gateway.php:442
 msgid ""
 "Enabling this (and the debug mode from your wp-config file) will log "
 "information, e.g. bank responses, which will help in debugging issues."
@@ -377,17 +657,17 @@ msgstr ""
 "τραπεζικές απαντήσεις, οι οποίες θα βοηθήσουν σε ζητήματα εντοπισμού "
 "σφαλμάτων."
 
-#: classes/WC_Piraeusbank_Gateway.php:329
+#: classes/WC_Piraeusbank_Gateway.php:445
 msgid "Enable 2nd “payment received” email"
 msgstr "Ενεργοποίηση αποστολής του 2ου email “Η πληρωμή έχει ληφθεί”"
 
-#: classes/WC_Piraeusbank_Gateway.php:331
+#: classes/WC_Piraeusbank_Gateway.php:447
 msgid "Enable sending Customer order note with transaction details"
 msgstr ""
 "Ενεργοποίηση αποστολής Σημείωσης παραγγελίας με τις πληροφορίες της "
 "συναλλαγής"
 
-#: classes/WC_Piraeusbank_Gateway.php:333
+#: classes/WC_Piraeusbank_Gateway.php:449
 msgid ""
 "Enabling this will send an email with the support reference id and "
 "transaction id to the customer, after the transaction has been completed "
@@ -397,19 +677,21 @@ msgstr ""
 "reference Id και το id συναλλαγής στον πελάτη, μετά την ολοκλήρωση της "
 "συναλλαγής (είτε επιτυχημένη είτε αποτυχήμενη)"
 
-#: classes/WC_Piraeusbank_Gateway.php:365
+#: classes/WC_Piraeusbank_Gateway.php:481
 msgid "Thank you page"
 msgstr "Σελίδα : Ευχαριστούμε για την αγορά"
 
-#: classes/WC_Piraeusbank_Gateway.php:428
+#: classes/WC_Piraeusbank_Gateway.php:541
 msgid "Choose Installments"
 msgstr "Επιλογή Δόσεων"
 
-#: classes/WC_Piraeusbank_Gateway.php:432
-msgid "Without installments"
-msgstr "Χωρίς δόσεις"
+#. translators: %s: currency code, e.g. USD
+#: classes/WC_Piraeusbank_Gateway.php:590
+#, php-format
+msgid "Piraeus Bank cannot be used for payments in %s."
+msgstr "Η Τράπεζα Πειραιώς δεν μπορεί να χρησιμοποιηθεί για πληρωμές σε %s."
 
-#: classes/WC_Piraeusbank_Gateway.php:577
+#: classes/WC_Piraeusbank_Gateway.php:712
 msgid ""
 "Thank you for your order. We are now redirecting you to Piraeus Bank to make "
 "payment."
@@ -417,25 +699,25 @@ msgstr ""
 "Ευχαριστούμε για τη παραγγελία. Σας ανακατευθύνουμε στη Τράπεζα Πειραιώς για "
 "να πραγματοποιηθεί πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:610
+#: classes/WC_Piraeusbank_Gateway.php:745
 msgid "Pay via Pireaus Bank"
 msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς"
 
-#: classes/WC_Piraeusbank_Gateway.php:610
+#: classes/WC_Piraeusbank_Gateway.php:745
 msgid "Cancel order &amp; restore cart"
 msgstr "Ακύρωση παραγγελίας &amp; άδειασμα καλαθιού"
 
-#: classes/WC_Piraeusbank_Gateway.php:619
+#: classes/WC_Piraeusbank_Gateway.php:760
 msgid "An error occured, please contact the Administrator. "
 msgstr "Συνέβει ένα σφάλμα, επικοινωνήστε με το Διαχειριστή. "
 
-#: classes/WC_Piraeusbank_Gateway.php:622
-#: classes/WC_Piraeusbank_Gateway.php:624
-#: classes/WC_Piraeusbank_Gateway.php:625
+#: classes/WC_Piraeusbank_Gateway.php:763
+#: classes/WC_Piraeusbank_Gateway.php:766
+#: classes/WC_Piraeusbank_Gateway.php:767
 msgid "Error"
 msgstr "Σφάλμα"
 
-#: classes/WC_Piraeusbank_Gateway.php:658
+#: classes/WC_Piraeusbank_Gateway.php:800
 msgid ""
 "Thank you - your order is now pending payment. You should be automatically "
 "redirected to Piraeus Paycenter to make payment."
@@ -444,7 +726,7 @@ msgstr ""
 "αυτόματα στο Paycenter της Τράπεζας Πειραιώς για να πραγματοποιήσετε την "
 "πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:685
+#: classes/WC_Piraeusbank_Gateway.php:893
 msgid ""
 "A technical problem occured. <br />The transaction wasn't successful, "
 "payment wasn't received."
@@ -452,13 +734,9 @@ msgstr ""
 "Ένα τεχνικό πρόβλημα συνέβει. <br /> Η συναλλαγή δεν ήταν επιτυχής, δε "
 "λάβαμε πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:689
-msgid "Payment error:"
-msgstr "Σφάλμα Πληρωμής:"
-
-#: classes/WC_Piraeusbank_Gateway.php:743
-#: classes/WC_Piraeusbank_Gateway.php:792
-#: classes/WC_Piraeusbank_Gateway.php:805
+#: classes/WC_Piraeusbank_Gateway.php:916
+#: classes/WC_Piraeusbank_Gateway.php:1016
+#: classes/WC_Piraeusbank_Gateway.php:1053
 msgid ""
 "Thank you for shopping with us. <br />However, the transaction wasn't "
 "successful, payment wasn't received."
@@ -466,17 +744,41 @@ msgstr ""
 "Σας ευχαριστούμε για την προτίμησή σας!<br /> Η συναλλαγή δεν ήταν επιτυχής, "
 "δε λάβαμε πληρωμή."
 
-#: classes/WC_Piraeusbank_Gateway.php:760
+#: classes/WC_Piraeusbank_Gateway.php:918
+msgid ""
+"Piraeus Bank: a payment response arrived whose HashKey could not be "
+"verified. The order status was not changed. Check the transaction in the "
+"Piraeus Bank AdminTool before fulfilling this order."
+msgstr ""
+"Τράπεζα Πειραιώς: ήρθε απάντηση πληρωμής με HashKey που δεν επαληθεύτηκε. Η "
+"κατάσταση της παραγγελίας δεν άλλαξε. Ελέγξτε τη συναλλαγή στο AdminTool της "
+"Τράπεζας Πειραιώς πριν εκτελέσετε την παραγγελία."
+
+#: classes/WC_Piraeusbank_Gateway.php:942
 msgid "Payment Via Peiraeus Bank<br />Transaction ID: "
 msgstr "Πληρωμή μέσω Τράπεζας Πειραιώς<br /> ID Συναλλαγής: "
 
-#: classes/WC_Piraeusbank_Gateway.php:760
-#: classes/WC_Piraeusbank_Gateway.php:766
-#: classes/WC_Piraeusbank_Gateway.php:773
+#: classes/WC_Piraeusbank_Gateway.php:942
+#: classes/WC_Piraeusbank_Gateway.php:967
+#: classes/WC_Piraeusbank_Gateway.php:973
 msgid "<br />Support Reference ID: "
 msgstr "<br />Support Reference ID: "
 
-#: classes/WC_Piraeusbank_Gateway.php:763
+#: classes/WC_Piraeusbank_Gateway.php:946
+msgid "Payment method detected: IRIS (Piraeus Bank)."
+msgstr "Τρόπος πληρωμής: IRIS (Τράπεζα Πειραιώς)."
+
+#: classes/WC_Piraeusbank_Gateway.php:949
+msgid "CardType indicates IRIS payment (CardType:15)."
+msgstr "Το CardType δείχνει πληρωμή IRIS (CardType:15)."
+
+#. translators: %s: FPAN or DPAN
+#: classes/WC_Piraeusbank_Gateway.php:956
+#, php-format
+msgid "Paid via Google Pay (%s)."
+msgstr "Πληρώθηκε μέσω Google Pay (%s)."
+
+#: classes/WC_Piraeusbank_Gateway.php:964
 msgid ""
 "Thank you for shopping with us.<br />Your transaction was successful, "
 "payment was received.<br />Your order is currently being processed."
@@ -484,7 +786,7 @@ msgstr ""
 "Σας ευχαριστούμε για την προτίμησή σας!<br /> Η συναλλαγή ήταν επιτυχής, "
 "λάβαμε τη πληρωμή. <br /> H παραγγελία σας βρίσκεται υπό επεξεργασία."
 
-#: classes/WC_Piraeusbank_Gateway.php:766
+#: classes/WC_Piraeusbank_Gateway.php:967
 msgid ""
 "Payment Received.<br />Your order is currently being processed.<br />We will "
 "be shipping your order to you soon.<br />Peiraeus Bank ID: "
@@ -493,7 +795,7 @@ msgstr ""
 "Θα σας αποστείλουμε τη παραγγελία σας το συντομότερο δυνατό.<br /> ID "
 "Συναλλαγής Τράπεζας Πειραιώς: "
 
-#: classes/WC_Piraeusbank_Gateway.php:770
+#: classes/WC_Piraeusbank_Gateway.php:970
 msgid ""
 "Thank you for shopping with us.<br />Your transaction was successful, "
 "payment was received.<br />Your order is now complete."
@@ -501,7 +803,7 @@ msgstr ""
 "Σας ευχαριστούμε για την προτίμησή σας!<br /> Η συναλλαγή ήταν επιτυχής, "
 "λάβαμε τη πληρωμή. <br /> H παραγγελία σας έχει ολοκληρωθεί."
 
-#: classes/WC_Piraeusbank_Gateway.php:773
+#: classes/WC_Piraeusbank_Gateway.php:973
 msgid ""
 "Payment Received.<br />Your order is now complete.<br />Peiraeus Transaction "
 "ID: "
@@ -509,7 +811,7 @@ msgstr ""
 "Λάβαμε την πληρωμή. <br /> Η παραγγελία σας έχει ολοκληρωθεί.<br /> ID "
 "Συναλλαγής Τράπεζας Πειραιώς: "
 
-#: classes/WC_Piraeusbank_Gateway.php:786
+#: classes/WC_Piraeusbank_Gateway.php:1000
 msgid ""
 "Thank you for shopping with us.<br />Your transaction was previously "
 "received.<br />"
@@ -517,97 +819,96 @@ msgstr ""
 "Ευχαριστούμε που πραγματοποιήσατε τις αγορές σας. <br /> Η συναλλαγή έχει "
 "πραγματοποιηθεί ήδη. <br />"
 
-#: classes/WC_Piraeusbank_Gateway.php:903
+#: classes/WC_Piraeusbank_Gateway.php:1043
+msgid ""
+"Piraeus Bank: a failure response arrived whose HashKey could not be "
+"verified. The order status was not changed."
+msgstr ""
+"Τράπεζα Πειραιώς: ήρθε απάντηση αποτυχίας με HashKey που δεν επαληθεύτηκε. Η "
+"κατάσταση της παραγγελίας δεν άλλαξε."
+
+#. translators: %s: Piraeus Bank Support Reference ID
+#: classes/WC_Piraeusbank_Gateway.php:1094
+#, php-format
+msgid ""
+"Piraeus Bank: the IRIS payment was started but not yet confirmed "
+"(ResponseCode 09). It may still be completed. Check it in the Piraeus Bank "
+"AdminTool before shipping or cancelling. Support Reference ID: %s"
+msgstr ""
+"Τράπεζα Πειραιώς: η πληρωμή IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα "
+"(ResponseCode 09). Μπορεί να ολοκληρωθεί αργότερα. Ελέγξτε την στο AdminTool "
+"της Τράπεζας Πειραιώς πριν αποστείλετε ή ακυρώσετε την παραγγελία. Support "
+"Reference ID: %s"
+
+#: classes/WC_Piraeusbank_Gateway.php:1099
+msgid ""
+"Your IRIS payment has been started but not yet confirmed by the bank. Please "
+"do not pay again. We will update your order as soon as the payment is "
+"confirmed."
+msgstr ""
+"Η πληρωμή σας μέσω IRIS ξεκίνησε αλλά δεν έχει επιβεβαιωθεί ακόμα από την "
+"τράπεζα. Παρακαλούμε μην πληρώσετε ξανά. Θα ενημερώσουμε την παραγγελία σας "
+"μόλις επιβεβαιωθεί η πληρωμή."
+
+#: classes/WC_Piraeusbank_Gateway.php:1121
+msgid "Piraeus Bank: the customer cancelled the payment on the bank page."
+msgstr ""
+"Τράπεζα Πειραιώς: ο πελάτης ακύρωσε την πληρωμή στη σελίδα της τράπεζας."
+
+#: classes/WC_Piraeusbank_Gateway.php:1122
+msgid "Your payment was cancelled. You can try again."
+msgstr "Η πληρωμή σας ακυρώθηκε. Μπορείτε να δοκιμάσετε ξανά."
+
+#: classes/WC_Piraeusbank_Gateway.php:1325
 msgid " is a mandatory field!"
+msgstr " είναι υποχρεωτικό πεδίο!"
+
+#: wooshop-piraeus.php:57
+msgid ""
+"Piraeus Bank Payment Gateway requires WooCommerce to be installed and active."
 msgstr ""
+"Το Piraeus Bank Payment Gateway απαιτεί το WooCommerce εγκατεστημένο και "
+"ενεργό."
 
-#: functions.php:968
-msgid "Ammochostos"
-msgstr "Αμμόχωστος"
+#~ msgid ""
+#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it "
+#~ "will gradually abolish the Preauthorized Payment Service for all "
+#~ "merchants, beginning from the ones obtained MIDs from 29/1/2019 onwards."
+#~ "<br /> You are highly recommended to disable the preAuthorized Payment "
+#~ "Service as soon as possible."
+#~ msgstr ""
+#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
+#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που "
+#~ "ήταν διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί "
+#~ "στα MID που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε "
+#~ "να απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο "
+#~ "δυνατόν."
 
-#: functions.php:969
-msgid "Keryneia"
-msgstr "Κερύvεια"
+#~ msgid "Enter your Piraeus Bank Password"
+#~ msgstr "Εισάγεται το Password της Τράπεζας Πειραιώς"
 
-#: functions.php:970
-msgid "Larnaka"
-msgstr "Λάρνακα"
+#~ msgid "Pre-Authorize"
+#~ msgstr "Προ-Έγκριση"
 
-#: functions.php:971
-msgid "Lefkosia"
-msgstr "Λευκωσία"
+#~ msgid "Enable to capture preauthorized payments"
+#~ msgstr "Ενεργοποιήστε για να συλλέγεται προεγκεκριμένες πληρωμές"
 
-#: functions.php:972
-msgid "Lemesos"
-msgstr "Λεμεσός"
+#~ msgid ""
+#~ "<strong>Important Notice:</strong> Piraeus Bank has announced that it "
+#~ "will gradually abolish the Preauthorized Payment Service for all "
+#~ "merchants, beginning from the ones obtained MIDs from 29/1/2019 onwards."
+#~ "<br /> Default payment method is Purchase, enable for Pre-Authorized "
+#~ "payments. You will then need to accept them from Piraeus Bank AdminTool"
+#~ msgstr ""
+#~ "<strong>Σημαντική Ενημέρωση:</strong> Η Τράπεζα Πειραιώς ανακοίνωσε ότι "
+#~ "προχωρά σε σταδιακή κατάργηση της υπηρεσίας Προ-έγκρισης πληρωμών που "
+#~ "ήταν διαθέσιμη για τους εμπόρους. <br />Ήδη η κατάργηση έχει εφαρμοστεί "
+#~ "στα MID που έχουν δημιουργηθεί μετά τις 29/1/2019.<br /> Σας συνιστούμε "
+#~ "να απενεργοποιήσετε την υπηρεσίας Προ-έγκρισης πληρωμών το συντομότερο "
+#~ "δυνατόν"
 
-#: functions.php:973
-msgid "Pafos"
-msgstr "Πάφος"
-
-#: functions.php:976
-msgid "Baden-Württemberg"
-msgstr ""
-
-#: functions.php:977
-msgid "Bayern"
-msgstr ""
-
-#: functions.php:978
-msgid "Berlin"
-msgstr ""
-
-#: functions.php:979
-msgid "Brandenburg"
-msgstr ""
-
-#: functions.php:980
-msgid "Bremen"
-msgstr ""
-
-#: functions.php:981
-msgid "Hamburg"
-msgstr ""
-
-#: functions.php:982
-msgid "Hessen"
-msgstr ""
-
-#: functions.php:983
-msgid "Mecklenburg-Vorpommern"
-msgstr ""
-
-#: functions.php:984
-msgid "Niedersachsen"
-msgstr ""
-
-#: functions.php:985
-msgid "Nordrhein-Westfalen"
-msgstr ""
-
-#: functions.php:986
-msgid "Rheinland-Pfalz"
-msgstr ""
-
-#: functions.php:987
-msgid "Saarland"
-msgstr ""
-
-#: functions.php:988
-msgid "Sachsen"
-msgstr ""
-
-#: functions.php:989
-msgid "Sachsen-Anhalt"
-msgstr ""
-
-#: functions.php:990
-msgid "Schleswig-Holstein"
-msgstr ""
-
-#: functions.php:991
-msgid "Thüringen"
-msgstr ""
+#~ msgid "Payment error:"
+#~ msgstr "Σφάλμα Πληρωμής:"
 
 #~ msgid "Cardholder name is mandatory"
 #~ msgstr ""

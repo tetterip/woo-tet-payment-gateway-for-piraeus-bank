@@ -20,6 +20,9 @@ class Application {
 
         $checkout_block = new Checkout_Block( $entrypoint );
         $checkout_block->init();
+
+        Health::init();
+        Diagnostics::init();
     }
 
     public function init() {
@@ -32,20 +35,22 @@ class Application {
         load_plugin_textdomain( self::PLUGIN_NAMESPACE, false, dirname( plugin_basename( __FILE__ ) ) . '/../languages/' );
     }
 
+    /**
+     * Show the message stored by the bank callback on the page the customer lands on: the
+     * order-received page, or the order's pay page after a declined payment.
+     */
     public function piraeusbank_message() {
-        $order_id = absint( get_query_var( 'order-received' ) );
-
-        if ( ! $order_id ) {
+        if ( is_order_received_page() ) {
+            $order_id = absint( get_query_var( 'order-received' ) );
+        } elseif ( is_checkout_pay_page() ) {
+            $order_id = absint( get_query_var( 'order-pay' ) );
+        } else {
             return;
         }
 
-        $order = wc_get_order( $order_id );
+        $order = $order_id ? wc_get_order( $order_id ) : null;
 
-        if ( ! $order ) {
-            return;
-        }
-
-        if ( ! is_order_received_page() || 'piraeusbank_gateway' !== $order->get_payment_method() ) {
+        if ( ! $order || 'piraeusbank_gateway' !== $order->get_payment_method() ) {
             return;
         }
 

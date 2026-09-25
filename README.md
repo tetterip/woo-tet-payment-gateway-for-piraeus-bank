@@ -14,6 +14,12 @@ Based on [Piraeus Bank WooCommerce Payment Gateway](https://wordpress.org/plugin
 - Block-based Checkout compatible
 - HPOS compatible
 - HTTP proxy support for servers without a static IP
+- Greek phone numbers sent in the matching 3-D Secure field (mobile / fixed line)
+- Google Pay payments recorded on the order (FPAN / DPAN)
+- Declined payments return to the order's pay page with a "try again" option
+- Admin warning when the bank rejects the credentials, and a daily check for payments that never got a bank response
+- Settings-page diagnostics: server outbound IP, Cloudflare detection, and a "Test callback URL" check for host firewalls
+- Bank password stored only as the hash the bank needs
 
 ## Requirements
 

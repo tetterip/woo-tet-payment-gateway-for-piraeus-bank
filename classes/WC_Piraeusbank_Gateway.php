@@ -77,7 +77,13 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $this->pb_AcquirerId             = absint( $this->get_option( 'pb_AcquirerId' ) );
         $this->pb_PosId                  = absint( $this->get_option( 'pb_PosId' ) );
         $this->pb_Username               = sanitize_text_field( $this->get_option( 'pb_Username' ) );
+        // Only the MD5 digest the bank receives is stored ("md5:<digest>"). A plain password
+        // saved by an older version is converted here, once.
         $this->pb_Password               = sanitize_text_field( $this->get_option( 'pb_Password' ) );
+        if ( $this->pb_Password !== '' && ! Credentials::is_digest( $this->pb_Password ) ) {
+            $this->pb_Password = Credentials::to_store( '', $this->pb_Password );
+            $this->update_option( 'pb_Password', $this->pb_Password );
+        }
         $this->pb_ProxyHost              = $this->get_option( 'pb_ProxyHost' );
         $this->pb_ProxyPort              = $this->get_option( 'pb_ProxyPort' );
         $this->pb_ProxyUsername          = $this->get_option( 'pb_ProxyUsername' );
@@ -161,45 +167,145 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
     }
 
     public function admin_options() {
-        $base_url = $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
+        $host        = get_bloginfo( 'url' ) . '/';
+        $outbound_ip = Diagnostics::outbound_ip();
+        $site_ip     = Diagnostics::site_ip();
 
-        $ip = get_transient( 'piraeusbank_server_ip' );
-        if ( ! $ip ) {
-            $ch = curl_init();
-            curl_setopt( $ch, CURLOPT_URL, 'https://api.ipify.org' );
-            curl_setopt( $ch, CURLOPT_HEADER, 0 );
-            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-            curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
-            $output = curl_exec( $ch );
-            curl_close( $ch );
-            $ip = ! empty( $output ) ? $output : gethostbyname( $base_url );
-            set_transient( 'piraeusbank_server_ip', $ip, 12 * HOUR_IN_SECONDS );
+        $urls = [
+            __( 'Website URL', Application::PLUGIN_NAMESPACE )   => $host,
+            __( 'Referrer URL', Application::PLUGIN_NAMESPACE )  => $host . 'checkout/',
+            __( 'Success page', Application::PLUGIN_NAMESPACE )  => Diagnostics::callback_url( 'success' ),
+            __( 'Failure page', Application::PLUGIN_NAMESPACE )  => Diagnostics::callback_url( 'fail' ),
+            __( 'Backlink page', Application::PLUGIN_NAMESPACE ) => Diagnostics::callback_url( 'cancel' ),
+        ];
+
+        $urls_text = '';
+        foreach ( $urls as $label => $url ) {
+            $urls_text .= $label . ': ' . $url . "\n";
+        }
+        $urls_text .= __( 'Response method', Application::PLUGIN_NAMESPACE ) . ": POST\n";
+        if ( $outbound_ip !== '' ) {
+            $urls_text .= __( 'Server IP', Application::PLUGIN_NAMESPACE ) . ': ' . $outbound_ip . "\n";
         }
 
-        echo '<h3>' . __( 'Piraeus Bank Gateway', Application::PLUGIN_NAMESPACE ) . '</h3>';
-        echo '<p>' . __( 'Piraeus Bank Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards.', Application::PLUGIN_NAMESPACE ) . '</p>';
-        $host = get_bloginfo( 'url' ) . '/';
+        echo '<h3>' . esc_html__( 'Piraeus Bank Gateway', Application::PLUGIN_NAMESPACE ) . '</h3>';
+        echo '<p>' . esc_html__( 'Piraeus Bank Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards.', Application::PLUGIN_NAMESPACE ) . '</p>';
 
-
-        echo '<div style="border: 1px dashed #000; display: inline-block; padding: 10px;">';
-        echo '<h4>' . __( 'Technical data to be submitted to Piraeus Bank', Application::PLUGIN_NAMESPACE ) . '</h4>';
-        echo '<p>' . __( 'The data to be submitted to Piraeus Bank(<a href="mailto:OnlineServices@epayworldwide.gr">OnlineServices@epayworldwide.gr</a>) in order to provide the necessary technical info (test/live account) for transactions are as follows', Application::PLUGIN_NAMESPACE ) . ':</p>';
+        echo '<div style="border: 1px dashed #000; display: inline-block; padding: 10px; max-width: 900px;">';
+        echo '<h4>' . esc_html__( 'Technical data to be submitted to Piraeus Bank', Application::PLUGIN_NAMESPACE ) . '</h4>';
+        echo '<p>' . wp_kses_post( __( 'The data to be submitted to Piraeus Bank(<a href="mailto:OnlineServices@epayworldwide.gr">OnlineServices@epayworldwide.gr</a>) in order to provide the necessary technical info (test/live account) for transactions are as follows', Application::PLUGIN_NAMESPACE ) ) . ':</p>';
         echo '<ul>';
-        echo '<li><strong>Website URL:</strong> ' . $host . '</li>';
-        echo '<li><strong>Referrer url:</strong> ' . $host . 'checkout/' . ' </li>';
-        echo '<li><strong>Success page: </strong>' . $host . ( get_option( 'permalink_structure' ) ? 'wc-api/WC_Piraeusbank_Gateway?peiraeus=success' : '?wc-api=WC_Piraeusbank_Gateway&peiraeus=success' ) . ' </li>';
-        echo '<li><strong>Failure page:</strong> ' . $host . ( get_option( 'permalink_structure' ) ? 'wc-api/WC_Piraeusbank_Gateway?peiraeus=fail' : '?wc-api=WC_Piraeusbank_Gateway&peiraeus=fail' ) . ' </li>';
-        echo '<li><strong>Backlink page:</strong> ' . $host . ( get_option( 'permalink_structure' ) ? 'wc-api/WC_Piraeusbank_Gateway?peiraeus=cancel' : '?wc-api=WC_Piraeusbank_Gateway&peiraeus=cancel' ) . ' </li>';
-        echo '<li><strong>Response method :</strong> GET / POST  (Preferred one: POST)</li>';
-        echo '<li><strong>Server Ip:</strong> ' . esc_html( $ip ) . '</li>';
+        foreach ( $urls as $label => $url ) {
+            echo '<li><strong>' . esc_html( $label ) . ':</strong> <code>' . esc_html( $url ) . '</code></li>';
+        }
+        echo '<li><strong>' . esc_html__( 'Response method', Application::PLUGIN_NAMESPACE ) . ':</strong> GET / POST (' . esc_html__( 'preferred: POST', Application::PLUGIN_NAMESPACE ) . ')</li>';
+
+        echo '<li><strong>' . esc_html__( 'Server IP (outbound, the value the bank needs)', Application::PLUGIN_NAMESPACE ) . ':</strong> ';
+        if ( $outbound_ip !== '' ) {
+            echo '<code>' . esc_html( $outbound_ip ) . '</code>';
+        } else {
+            echo esc_html__( 'could not be determined. Run "curl -4 https://api.ipify.org" on the server over SSH, or ask your host for the server\'s outgoing IP address.', Application::PLUGIN_NAMESPACE );
+        }
+        echo '</li>';
+
+        if ( $site_ip !== '' && $site_ip !== $outbound_ip ) {
+            echo '<li><strong>' . esc_html__( 'Website IP (not the value for the bank)', Application::PLUGIN_NAMESPACE ) . ':</strong> <code>' . esc_html( $site_ip ) . '</code><br /><em>' . esc_html__( 'Visitors reach the site on this address, but requests to the bank leave from the outbound IP above. Registering the wrong one makes every payment fail.', Application::PLUGIN_NAMESPACE ) . '</em></li>';
+        }
+
+        if ( $this->pb_ProxyHost !== '' ) {
+            echo '<li><em>' . esc_html__( 'An HTTP proxy is configured below: requests to the bank go through it, so the bank needs the proxy\'s outgoing IP address.', Application::PLUGIN_NAMESPACE ) . '</em></li>';
+        }
         echo '</ul>';
-        echo '<p style="font-style:italic;">* Σημείωση: Τα urls Success, Failure, Backlink δημιουργούνται αυτόματα απο το plugin μας, ΔΕΝ χρείαζεται να δημιουργήσετε εσείς κάποια  επισπρόσθετη σελίδα</p>';
+
+        echo '<textarea id="piraeusbank-urls" readonly rows="1" style="position:absolute;left:-9999px;">' . esc_textarea( $urls_text ) . '</textarea>';
+        echo '<p><button type="button" class="button" data-piraeusbank-copy="piraeusbank-urls">' . esc_html__( 'Copy all to clipboard', Application::PLUGIN_NAMESPACE ) . '</button></p>';
+        echo '<p style="font-style:italic;">' . esc_html__( '* Note: the Success, Failure and Backlink URLs are created automatically by the plugin; you do not need to create any extra page.', Application::PLUGIN_NAMESPACE ) . '</p>';
         echo '</div>';
+
+        $this->render_diagnostics();
+
         echo '<table class="form-table">';
         $this->generate_settings_html();
         echo '</table>';
+    }
 
+    /**
+     * Callback firewall test and Cloudflare detection, below the technical data box.
+     *
+     * @return void
+     */
+    private function render_diagnostics() {
+        echo '<div style="margin-top: 15px; max-width: 900px;">';
+        echo '<h4>' . esc_html__( 'Callback diagnostics', Application::PLUGIN_NAMESPACE ) . '</h4>';
+        echo '<p>' . esc_html__( 'Sends a test declined-payment response from your server to its own Success and Failure URLs and checks that it reaches the plugin. A host firewall that blocks the bank\'s responses leaves orders in "Pending payment". No order is created or changed.', Application::PLUGIN_NAMESPACE ) . '</p>';
+        echo '<p><button type="button" class="button" id="piraeusbank-test-callback">' . esc_html__( 'Test callback URL', Application::PLUGIN_NAMESPACE ) . '</button></p>';
+        echo '<div id="piraeusbank-test-results" aria-live="polite"></div>';
 
+        if ( Diagnostics::is_cloudflare() ) {
+            $ranges = Diagnostics::cloudflare_ranges();
+
+            echo '<div class="notice notice-info inline"><p><strong>' . esc_html__( 'This site is served through Cloudflare.', Application::PLUGIN_NAMESPACE ) . '</strong> ';
+            echo esc_html__( 'The bank\'s responses reach the site through Cloudflare, so Cloudflare\'s WAF, Bot Fight Mode or a challenge page can block them. Add a WAF skip rule for the path /wc-api/WC_Piraeusbank_Gateway. If Euronet / Piraeus Bank asks for the addresses your site uses, give them the Cloudflare ranges below.', Application::PLUGIN_NAMESPACE ) . '</p>';
+
+            if ( $ranges ) {
+                echo '<details><summary>' . esc_html__( 'Cloudflare IPv4 ranges', Application::PLUGIN_NAMESPACE ) . '</summary>';
+                echo '<textarea id="piraeusbank-cf-ranges" readonly rows="8" cols="30" class="code">' . esc_textarea( implode( "\n", $ranges ) ) . '</textarea>';
+                echo '<p><button type="button" class="button" data-piraeusbank-copy="piraeusbank-cf-ranges">' . esc_html__( 'Copy to clipboard', Application::PLUGIN_NAMESPACE ) . '</button></p></details>';
+            } else {
+                echo '<p>' . esc_html__( 'The Cloudflare IP list could not be downloaded; see https://www.cloudflare.com/ips/.', Application::PLUGIN_NAMESPACE ) . '</p>';
+            }
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+
+    /**
+     * Password field that is always rendered empty: only the MD5 digest is stored.
+     *
+     * @param string $key
+     * @param array  $data
+     *
+     * @return string
+     */
+    public function generate_pb_secret_html( $key, $data ) {
+        $field_key = $this->get_field_key( $key );
+        $has_value = $this->get_option( $key ) !== '';
+
+        ob_start();
+        ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?> <?php echo $this->get_tooltip_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></label>
+            </th>
+            <td class="forminp">
+                <fieldset>
+                    <legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+                    <input class="input-text regular-input" type="password" name="<?php echo esc_attr( $field_key ); ?>" id="<?php echo esc_attr( $field_key ); ?>" value="" autocomplete="new-password" placeholder="<?php echo esc_attr( $has_value ? __( 'Saved. Leave blank to keep it.', Application::PLUGIN_NAMESPACE ) : '' ); ?>" />
+                    <?php echo $this->get_description_html( $data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                </fieldset>
+            </td>
+        </tr>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * @param string      $key
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function validate_pb_secret_field( $key, $value ) {
+        return Credentials::to_store( sanitize_text_field( wp_unslash( (string) $value ) ), (string) $this->get_option( $key ) );
+    }
+
+    /**
+     * Hidden when the store currency cannot be sent to the bank.
+     *
+     * @return bool
+     */
+    public function is_available() {
+        return parent::is_available() && Currency_Codes::numeric( get_woocommerce_currency() ) !== '';
     }
 
     public function soap_error_notice() {
@@ -270,8 +376,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             ],
             'pb_Password'               => [
                 'title'       => __( 'Piraeus Bank Password', Application::PLUGIN_NAMESPACE ),
-                'type'        => 'password',
-                'description' => __( 'Enter your Piraeus Bank Password', Application::PLUGIN_NAMESPACE ),
+                'type'        => 'pb_secret',
+                'description' => __( 'Enter your Piraeus Bank Password. Only a hash of it is stored, so the field always appears empty: leave it blank to keep the saved password.', Application::PLUGIN_NAMESPACE ),
                 'default'     => '',
                 'desc_tip'    => true,
             ],
@@ -476,6 +582,19 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $requestType   = '02';
         $ExpirePreauth = '0';
         $reference     = Payment_Reference::build( (int) $order_id );
+        $currencyCode  = Currency_Codes::numeric( $order->get_currency() );
+
+        if ( $currencyCode === '' ) {
+            $error = sprintf(
+                /* translators: %s: currency code, e.g. USD */
+                __( 'Piraeus Bank cannot be used for payments in %s.', Application::PLUGIN_NAMESPACE ),
+                $order->get_currency()
+            );
+            $order->add_order_note( $error );
+            echo esc_html( $error );
+
+            return '';
+        }
 
         if ( method_exists( $order, 'get_meta' ) ) {
             $installments = $order->get_meta( '_doseis' );
@@ -525,9 +644,19 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             $ShipAddrStateCode = $this->pb_validateStateCode( $ShipAddrState, ! empty( $order->get_shipping_country() ) ? $order->get_shipping_country() : $order->get_billing_country() );
             $Email             = $order->get_billing_email();
 
-            $HomePhone   = $this->pb_validatePhoneNumberAllCountries( $order->get_billing_phone(), $order->get_billing_country() );
-            $MobilePhone = $this->pb_validatePhoneNumberAllCountries( $order->get_billing_phone(), $order->get_billing_country() );
-            $WorkPhone   = $this->pb_validatePhoneNumberAllCountries( $order->get_billing_phone(), $order->get_billing_country() );
+            // A Greek number goes only in the field matching its type (69x mobile, 2x fixed
+            // line); the issuer's 3DS risk engine scores these fields separately. Other
+            // countries' numbers carry no reliable type, so they still fill all three.
+            $greekPhone = Phone_Numbers::greek( $order->get_billing_phone(), $order->get_billing_country() );
+            if ( $greekPhone !== null ) {
+                $MobilePhone = $greekPhone['type'] === 'mobile' ? $greekPhone['number'] : '';
+                $HomePhone   = $greekPhone['type'] === 'home' ? $greekPhone['number'] : '';
+                $WorkPhone   = '';
+            } else {
+                $HomePhone   = $this->pb_validatePhoneNumberAllCountries( $order->get_billing_phone(), $order->get_billing_country() );
+                $MobilePhone = $HomePhone;
+                $WorkPhone   = $HomePhone;
+            }
 
             $name           = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
             $CardholderName = $this->pb_getCardholderName( $order->get_id(), $name, $this->pb_cardholder_name );
@@ -535,7 +664,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
             $ticketRequest = [
                 'Username'          => $this->pb_Username,
-                'Password'          => hash( 'md5', $this->pb_Password ),
+                'Password'          => Credentials::digest( $this->pb_Password ),
                 'MerchantId'        => $this->pb_PayMerchantId,
                 'PosId'             => $this->pb_PosId,
                 'AcquirerId'        => $this->pb_AcquirerId,
@@ -543,7 +672,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
                 'RequestType'       => $requestType,
                 'ExpirePreauth'     => $ExpirePreauth,
                 'Amount'            => $order->get_total(),
-                'CurrencyCode'      => '978',
+                'CurrencyCode'      => $currencyCode,
                 'Installments'      => $installments,
                 'Bnpl'              => '0',
                 'Parameters'        => '',
@@ -576,6 +705,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
 			if ( (int) $oResult->IssueNewTicketResult->ResultCode === 0 ) {
 				$wpdb->insert( $wpdb->prefix . 'piraeusbank_transactions', [ 'trans_ticket' => $oResult->IssueNewTicketResult->TranTicket, 'merch_ref' => $reference, 'timestamp' => current_time( 'mysql', 1 ) ] );
+				Health::clear_credentials_error();
 
                 wc_enqueue_js( '
                 $.blockUI({
@@ -619,6 +749,12 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
                     jQuery(".payment_buttons").hide();
                     </script>
                 </form>';
+            }
+
+            // 100 = Authentication Error: wrong Username/Password, which blocks every card
+            // payment. Surface it to the admin, not only to the customer who hit it.
+            if ( (int) $oResult->IssueNewTicketResult->ResultCode === 100 ) {
+                Health::flag_credentials_error( sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultDescription ) );
             }
 
             echo __( 'An error occured, please contact the Administrator. ', Application::PLUGIN_NAMESPACE );
@@ -685,6 +821,12 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $action    = isset( $_REQUEST['peiraeus'] ) && is_scalar( $_REQUEST['peiraeus'] ) ? sanitize_key( wp_unslash( $_REQUEST['peiraeus'] ) ) : '';
         $reference = isset( $_REQUEST['MerchantReference'] ) && is_scalar( $_REQUEST['MerchantReference'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['MerchantReference'] ) ) : '';
 
+        // "Test callback URL" in the settings: prove the request reached PHP, touch nothing.
+        if ( strpos( $reference, Diagnostics::TEST_REFERENCE_PREFIX ) === 0 ) {
+            header( Diagnostics::TEST_HEADER . ': reached' );
+            $this->redirect_and_exit( wc_get_checkout_url() );
+        }
+
         if ( $action === 'cancel' ) {
             $this->handle_cancel( $reference );
         }
@@ -721,7 +863,9 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         }
 
         if ( $this->redirect_page_id == -1 ) {
-            $redirect_url = $this->get_return_url( $order );
+            // A declined payment goes back to the order's pay page, which shows the message
+            // with a way to try again; anything else goes to the order-received page.
+            $redirect_url = $pb_message['message_type'] === 'error' && $order->needs_payment() ? $order->get_checkout_payment_url() : $this->get_return_url( $order );
         } else {
             $redirect_url = add_query_arg( [ 'msg' => urlencode( $pb_message['message'] ), 'type' => $pb_message['message_type'] ], ( $this->redirect_page_id === "" || $this->redirect_page_id === 0 ) ? get_site_url() . "/" : get_permalink( $this->redirect_page_id ) );
         }
@@ -747,16 +891,17 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
         if ( (int) $response['ResultCode'] !== 0 ) {
             $message = __( 'A technical problem occured. <br />The transaction wasn\'t successful, payment wasn\'t received.', Application::PLUGIN_NAMESPACE );
+            // Shown on the page the customer lands on (Application::piraeusbank_message()); a
+            // session notice would be lost, the bank's POST arrives without the session cookie.
             $this->set_message( $order, $message, 'error' );
 
-            wc_add_notice( __( 'Payment error:', Application::PLUGIN_NAMESPACE ) . $message, 'error' );
             if ( $order->has_status( [ 'pending', 'failed' ] ) ) {
                 $order->update_status( 'failed' );
             }
 
             $this->safe_log( '---- Piraeus Error -----', $message . ' ResultCode !== 0' );
 
-            $this->redirect_and_exit( wc_get_checkout_url() );
+            $this->redirect_and_exit( $order->needs_payment() ? $order->get_checkout_payment_url() : wc_get_checkout_url() );
         }
 
         if ( $this->pb_enable_log === 'yes' ) {
@@ -787,6 +932,9 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             $this->generic_add_meta( $order_id, '_piraeusbank_trans_ticket', $transTicket );
             $this->generic_add_meta( $order_id, '_piraeusbank_response_code', $ResponseCode );
             $this->generic_add_meta( $order_id, '_piraeusbank_processed_at', current_time( 'mysql' ) );
+            if ( $response['PanCardType'] !== '' ) {
+                $this->generic_add_meta( $order_id, '_piraeusbank_pan_card_type', $response['PanCardType'] );
+            }
 
             $order->payment_complete( $TransactionId );
 
@@ -799,6 +947,16 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             } elseif ( $response['CardType'] === '15' ) {
                 // CardType '15' also indicates IRIS according to epay spec
                 $order->add_order_note( __( 'CardType indicates IRIS payment (CardType:15).', Application::PLUGIN_NAMESPACE ) );
+            } elseif ( in_array( $response['PanCardType'], [ 'FPAN', 'DPAN' ], true ) ) {
+                // PanCardType is only returned for Google Pay: FPAN = the real card number,
+                // DPAN = a device token.
+                $order->add_order_note(
+                    sprintf(
+                        /* translators: %s: FPAN or DPAN */
+                        __( 'Paid via Google Pay (%s).', Application::PLUGIN_NAMESPACE ),
+                        $response['PanCardType']
+                    )
+                );
             }
 
             $message = '';
@@ -959,6 +1117,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $order = $reference !== '' ? $this->get_callback_order( $reference ) : null;
 
         if ( $order && ! $order->is_paid() && $order->has_status( [ 'pending', 'failed' ] ) && ! empty( $this->get_attempt_tickets( $reference ) ) ) {
+            $order->update_meta_data( Health::CUSTOMER_CANCEL, gmdate( 'Y-m-d H:i:s' ) );
             $order->update_status( 'cancelled', __( 'Piraeus Bank: the customer cancelled the payment on the bank page.', Application::PLUGIN_NAMESPACE ) );
             wc_add_notice( __( 'Your payment was cancelled. You can try again.', Application::PLUGIN_NAMESPACE ), 'notice' );
         }
@@ -1043,6 +1202,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             'PackageNo'          => ! empty( $package_no ) ? (string) absint( $package_no ) : '',
             'PaymentMethod'      => $text( 'PaymentMethod' ),
             'CardType'           => $text( 'CardType' ),
+            'PanCardType'        => strtoupper( $text( 'PanCardType' ) ),
         ];
     }
 
@@ -1213,8 +1373,10 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
     private function sanitize_log_data( $data ) {
         if ( is_string( $data ) ) {
             // Replace password with redacted text
-            $data = str_replace( $this->pb_Password, '[REDACTED]', $data );
-            $data = str_replace( hash( 'md5', $this->pb_Password ), '[REDACTED]', $data );
+            $digest = Credentials::digest( $this->pb_Password );
+            if ( $digest !== '' ) {
+                $data = str_replace( $digest, '[REDACTED]', $data );
+            }
         } elseif ( is_array( $data ) ) {
             // Sanitize sensitive keys in arrays
             $sensitive_keys = [ 'Password', 'pb_Password', 'HashKey' ];
