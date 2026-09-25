@@ -148,9 +148,8 @@ class Diagnostics {
      * @return array{url: string, status: string, message: string}
      */
     private static function run_test( string $action ): array {
-        $url = self::callback_url( $action );
-
-        $response = wp_remote_post( $url, [
+        $url  = self::callback_url( $action );
+        $args = [
             'timeout'     => 15,
             'redirection' => 0,
             'sslverify'   => apply_filters( 'https_local_ssl_verify', false ),
@@ -175,7 +174,34 @@ class Diagnostics {
                 'HashKey'             => '',
                 'PaymentMethod'       => '',
             ],
-        ] );
+        ];
+
+        // Behind Cloudflare, a request from the server to its own URL goes out through Cloudflare,
+        // whose bot protection blocks it (a server, not a browser). The bank's responses arrive
+        // through the customer's browser, which Cloudflare lets through, so that 403 says nothing
+        // about them. Test the server's own firewall instead, by connecting straight to it.
+        if ( self::is_cloudflare() ) {
+            $response = self::post_to_origin( $url, $args );
+            if ( ! is_wp_error( $response ) ) {
+                if ( wp_remote_retrieve_header( $response, self::TEST_HEADER ) === 'reached' ) {
+                    return [
+                        'url'     => $url,
+                        'status'  => 'pass',
+                        'message' => __( 'OK: the test response reached the plugin when sent straight to your server, so your server\'s firewall does not block it. Cloudflare was bypassed for this test; it normally lets the bank\'s responses through, because they arrive through the customer\'s browser.', Application::PLUGIN_NAMESPACE ),
+                    ];
+                }
+
+                // Only a firewall-style answer counts; anything else (404, a redirect) means the
+                // server's IP served another site, so the direct test proves nothing.
+                $code = (int) wp_remote_retrieve_response_code( $response );
+                if ( in_array( $code, [ 403, 406, 429 ], true ) || $code >= 500 ) {
+                    return self::blocked_result( $url, $response );
+                }
+            }
+            // No usable direct connection (no cURL, refused, another site): test through Cloudflare.
+        }
+
+        $response = wp_remote_post( $url, $args );
 
         if ( is_wp_error( $response ) ) {
             return [
@@ -197,13 +223,79 @@ class Diagnostics {
             ];
         }
 
+        return self::blocked_result( $url, $response );
+    }
+
+    /**
+     * POST to the site's own URL, connecting to this server directly instead of the address
+     * DNS gives (Cloudflare). The hostname, TLS SNI and Host header stay the same.
+     *
+     * @param string $url
+     * @param array  $args wp_remote_post() arguments
+     *
+     * @return array|\WP_Error
+     */
+    private static function post_to_origin( string $url, array $args ) {
+        $ip = isset( $_SERVER['SERVER_ADDR'] ) ? (string) $_SERVER['SERVER_ADDR'] : '';
+        if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+            $ip = '127.0.0.1';
+        }
+
+        if ( ! function_exists( 'curl_init' ) || ! defined( 'CURLOPT_RESOLVE' ) ) {
+            return new \WP_Error( 'piraeusbank_no_curl', 'cURL is not available.' );
+        }
+
+        $parts = wp_parse_url( $url );
+        $host  = $parts['host'] ?? '';
+        $port  = $parts['port'] ?? ( ( $parts['scheme'] ?? '' ) === 'https' ? 443 : 80 );
+        $pin   = $host . ':' . $port . ':' . ( strpos( $ip, ':' ) !== false ? '[' . $ip . ']' : $ip );
+
+        $resolve = function ( $handle, $request_args, $request_url ) use ( $url, $pin ) {
+            if ( $request_url === $url ) {
+                curl_setopt( $handle, CURLOPT_RESOLVE, [ $pin ] );
+            }
+        };
+
+        add_action( 'http_api_curl', $resolve, 10, 3 );
+        $response = wp_remote_post( $url, $args );
+        remove_action( 'http_api_curl', $resolve, 10 );
+
+        return $response;
+    }
+
+    /**
+     * Result for a response that did not come from the plugin: a Cloudflare block or a
+     * server firewall.
+     *
+     * @param string $url
+     * @param array  $response
+     *
+     * @return array{url: string, status: string, message: string}
+     */
+    private static function blocked_result( string $url, array $response ): array {
+        $code          = (int) wp_remote_retrieve_response_code( $response );
+        $by_cloudflare = wp_remote_retrieve_header( $response, 'cf-ray' ) !== ''
+            || stripos( (string) wp_remote_retrieve_header( $response, 'server' ), 'cloudflare' ) !== false;
+
+        if ( $by_cloudflare ) {
+            return [
+                'url'     => $url,
+                'status'  => 'warning',
+                'message' => sprintf(
+                    /* translators: %d: HTTP status code */
+                    __( 'Cloudflare stopped the test request (HTTP %d). This is expected: the test is sent by your server, which Cloudflare treats as a bot, while the bank\'s responses arrive through the customer\'s browser and normally pass. It does not mean payments are blocked. To be sure, check that paid and declined orders leave "Pending payment".', Application::PLUGIN_NAMESPACE ),
+                    $code
+                ),
+            ];
+        }
+
         return [
             'url'     => $url,
             'status'  => 'blocked',
             'message' => sprintf(
                 /* translators: %d: HTTP status code */
                 __( 'Blocked: the request did not reach the plugin (HTTP %d). A firewall (ModSecurity, Imunify360, BitNinja, LiteSpeed, a security plugin or a CDN) is probably intercepting it. Ask your host to whitelist this URL for the bank\'s responses; do not disable the firewall for the whole site.', Application::PLUGIN_NAMESPACE ),
-                (int) wp_remote_retrieve_response_code( $response )
+                $code
             ),
         ];
     }

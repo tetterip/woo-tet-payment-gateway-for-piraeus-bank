@@ -125,7 +125,7 @@ msgid "You are not allowed to do this."
 msgstr "Δεν έχετε δικαίωμα για αυτή την ενέργεια."
 
 #. translators: %s: error message
-#: classes/Diagnostics.php:186
+#: classes/Diagnostics.php:212
 #, php-format
 msgid ""
 "Your server could not connect to its own URL (%s). Many hosts block such "
@@ -137,12 +137,41 @@ msgstr ""
 "οπότε ο έλεγχος δεν μπορεί να δείξει αν κάποιο firewall μπλοκάρει την "
 "τράπεζα. Ρωτήστε τον πάροχό σας ή κάντε μια δοκιμαστική πληρωμή."
 
-#: classes/Diagnostics.php:196
+#: classes/Diagnostics.php:222
 msgid "OK: the test response reached the plugin."
 msgstr "OK: η δοκιμαστική απάντηση έφτασε στο plugin."
 
+#: classes/Diagnostics.php:190
+msgid ""
+"OK: the test response reached the plugin when sent straight to your server, "
+"so your server's firewall does not block it. Cloudflare was bypassed for "
+"this test; it normally lets the bank's responses through, because they "
+"arrive through the customer's browser."
+msgstr ""
+"OK: η δοκιμαστική απάντηση έφτασε στο plugin όταν στάλθηκε κατευθείαν στον "
+"διακομιστή σας, άρα το firewall του διακομιστή δεν την μπλοκάρει. Ο έλεγχος "
+"παρέκαμψε το Cloudflare· αυτό κανονικά αφήνει να περάσουν οι απαντήσεις της "
+"τράπεζας, γιατί έρχονται μέσω του browser του πελάτη."
+
 #. translators: %d: HTTP status code
-#: classes/Diagnostics.php:205
+#: classes/Diagnostics.php:286
+#, php-format
+msgid ""
+"Cloudflare stopped the test request (HTTP %d). This is expected: the test is "
+"sent by your server, which Cloudflare treats as a bot, while the bank's "
+"responses arrive through the customer's browser and normally pass. It does "
+"not mean payments are blocked. To be sure, check that paid and declined "
+"orders leave \"Pending payment\"."
+msgstr ""
+"Το Cloudflare σταμάτησε το δοκιμαστικό αίτημα (HTTP %d). Αυτό είναι "
+"αναμενόμενο: ο έλεγχος στέλνεται από τον διακομιστή σας, που το Cloudflare "
+"τον θεωρεί bot, ενώ οι απαντήσεις της τράπεζας έρχονται μέσω του browser του "
+"πελάτη και κανονικά περνούν. Δεν σημαίνει ότι οι πληρωμές μπλοκάρονται. Για "
+"σιγουριά, ελέγξτε ότι οι πληρωμένες και οι απορριφθείσες παραγγελίες φεύγουν "
+"από την «Εκκρεμεί πληρωμή»."
+
+#. translators: %d: HTTP status code
+#: classes/Diagnostics.php:297
 #, php-format
 msgid ""
 "Blocked: the request did not reach the plugin (HTTP %d). A firewall "

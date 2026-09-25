@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.1] - 2026-09-25
+
+### Fixed
+- **"Test callback URL" reported "Blocked" on every site behind Cloudflare**, even when payments worked. The test is sent by the server to its own URL, so it went out through Cloudflare, whose bot protection answers a server's request with 403. The bank's real responses arrive through the customer's browser, which Cloudflare lets through. Now:
+  - When the site is served through Cloudflare, the test connects straight to the server instead, so it checks the server's own firewall (ModSecurity, Imunify360 etc.), which is what can really block the bank. If that is not possible (no cURL, or the server's IP answers for another site), the test goes through Cloudflare as before.
+  - A 403 that comes from Cloudflare is shown as a warning that explains it does not mean payments are blocked, instead of "Blocked".
+
+---
+
 ## [3.6.0] - 2026-09-25
 
 ### Added
