@@ -374,11 +374,20 @@ msgstr ""
 
 #: classes/WC_Piraeusbank_Gateway.php:216
 msgid ""
-"An HTTP proxy is configured below: requests to the bank go through it, so "
-"the bank needs the proxy's outgoing IP address."
+"An HTTP proxy is configured in the settings above: requests to the bank go "
+"through it, so the bank needs the proxy's outgoing IP address."
 msgstr ""
-"Παρακάτω έχει ρυθμιστεί HTTP proxy: τα αιτήματα προς την τράπεζα περνούν από "
-"αυτόν, οπότε η τράπεζα χρειάζεται την εξερχόμενη IP του proxy."
+"Στις ρυθμίσεις παραπάνω έχει οριστεί HTTP proxy: τα αιτήματα προς την "
+"τράπεζα περνούν από αυτόν, οπότε η τράπεζα χρειάζεται την εξερχόμενη IP του "
+"proxy."
+
+#: classes/WC_Piraeusbank_Gateway.php:172
+msgid ""
+"The technical data for the bank and the callback test are below the Save "
+"changes button."
+msgstr ""
+"Τα τεχνικά στοιχεία για την τράπεζα και ο έλεγχος callback βρίσκονται κάτω "
+"από το κουμπί «Αποθήκευση αλλαγών»."
 
 #: classes/WC_Piraeusbank_Gateway.php:221
 msgid "Copy all to clipboard"

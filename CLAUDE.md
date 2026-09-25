@@ -14,7 +14,7 @@ Modified fork of *Piraeus Bank WooCommerce Payment Gateway* by Papaki (Enartia S
 wooshop-piraeus.php                          – Plugin entry point; autoloader, feature declarations, bootstraps Application, ttrp.gr Plugins menu
 classes/
   Application.php                            – Registers hooks, gateway filter, language loading, state additions (CY, DE)
-  WC_Piraeusbank_Gateway.php                 – Core gateway: settings, form generation, SOAP calls, response handling
+  WC_Piraeusbank_Gateway.php                 – Core gateway: settings, form generation, SOAP calls, response handling; bank setup data + diagnostics render below the Save button via `woocommerce_after_settings_checkout` (added from `admin_options()`)
   Checkout_Block.php                         – Block Checkout integration; registers payment method type, cardholder field
   WC_Piraeusbank_Gateway_Checkout_Block.php  – Block-side payment method type (JS + PHP glue)
   Payment_Reference.php                      – Pure: MerchantReference build/parse, IRIS detection (tested)

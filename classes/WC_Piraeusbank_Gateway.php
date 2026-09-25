@@ -167,6 +167,27 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
     }
 
     public function admin_options() {
+        echo '<h3>' . esc_html__( 'Piraeus Bank Gateway', Application::PLUGIN_NAMESPACE ) . '</h3>';
+        echo '<p>' . esc_html__( 'Piraeus Bank Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards.', Application::PLUGIN_NAMESPACE ) . '</p>';
+        echo '<p><a href="#piraeusbank-bank-setup">' . esc_html__( 'The technical data for the bank and the callback test are below the Save changes button.', Application::PLUGIN_NAMESPACE ) . '</a></p>';
+
+        echo '<table class="form-table">';
+        $this->generate_settings_html();
+        echo '</table>';
+
+        // The bank setup data and diagnostics go below the Save button, after WooCommerce closes the
+        // settings form (so their buttons are not part of it).
+        if ( ! has_action( 'woocommerce_after_settings_checkout', [ $this, 'render_bank_setup' ] ) ) {
+            add_action( 'woocommerce_after_settings_checkout', [ $this, 'render_bank_setup' ] );
+        }
+    }
+
+    /**
+     * Technical data for the bank and callback diagnostics, below the settings form.
+     *
+     * @return void
+     */
+    public function render_bank_setup() {
         $host        = get_bloginfo( 'url' ) . '/';
         $outbound_ip = Diagnostics::outbound_ip();
         $site_ip     = Diagnostics::site_ip();
@@ -188,9 +209,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             $urls_text .= __( 'Server IP', Application::PLUGIN_NAMESPACE ) . ': ' . $outbound_ip . "\n";
         }
 
-        echo '<h3>' . esc_html__( 'Piraeus Bank Gateway', Application::PLUGIN_NAMESPACE ) . '</h3>';
-        echo '<p>' . esc_html__( 'Piraeus Bank Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners  and Visa cards.', Application::PLUGIN_NAMESPACE ) . '</p>';
-
+        echo '<div id="piraeusbank-bank-setup" style="margin-top: 10px;">';
         echo '<div style="border: 1px dashed #000; display: inline-block; padding: 10px; max-width: 900px;">';
         echo '<h4>' . esc_html__( 'Technical data to be submitted to Piraeus Bank', Application::PLUGIN_NAMESPACE ) . '</h4>';
         echo '<p>' . wp_kses_post( __( 'The data to be submitted to Piraeus Bank(<a href="mailto:OnlineServices@epayworldwide.gr">OnlineServices@epayworldwide.gr</a>) in order to provide the necessary technical info (test/live account) for transactions are as follows', Application::PLUGIN_NAMESPACE ) ) . ':</p>';
@@ -213,7 +232,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         }
 
         if ( $this->pb_ProxyHost !== '' ) {
-            echo '<li><em>' . esc_html__( 'An HTTP proxy is configured below: requests to the bank go through it, so the bank needs the proxy\'s outgoing IP address.', Application::PLUGIN_NAMESPACE ) . '</em></li>';
+            echo '<li><em>' . esc_html__( 'An HTTP proxy is configured in the settings above: requests to the bank go through it, so the bank needs the proxy\'s outgoing IP address.', Application::PLUGIN_NAMESPACE ) . '</em></li>';
         }
         echo '</ul>';
 
@@ -223,10 +242,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         echo '</div>';
 
         $this->render_diagnostics();
-
-        echo '<table class="form-table">';
-        $this->generate_settings_html();
-        echo '</table>';
+        echo '</div>';
     }
 
     /**
