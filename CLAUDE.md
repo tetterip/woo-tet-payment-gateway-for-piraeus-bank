@@ -99,3 +99,4 @@ Proposals from a suite-wide review, **not yet approved or scheduled** — discus
 3. **Pay-by-link** — email the customer a payment link for phone/manual orders.
 4. **Apple Pay recording**, like the existing Google Pay FPAN/DPAN handling.
 - **Tests + CI (suite item S1)** — port the zero-dependency runner (`tests/run.php`, `tests/stubs.php`) and `.github/workflows/tests.yml` (PHP lint + tests on 7.4 / 8.1 / 8.2) from `woo-tet-acs-tracking`. Extract pure logic into testable functions first; aim for 10–20 tests on the decisions that matter.
+- **Callback test: tell redirects apart** — a 3xx answer (maintenance / "coming soon" mode, forced login, redirect rule) is reported as "Blocked … firewall". Alpha Bank 2.4.0 shows a separate "Redirected before reaching the plugin (to …)" message; port it.
