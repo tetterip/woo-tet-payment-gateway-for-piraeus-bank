@@ -7,6 +7,20 @@
 		return;
 	}
 
+	// The box is printed after WooCommerce's settings form, outside it. Give it the
+	// form's side and bottom padding (newer WooCommerce versions add some) so it lines up.
+	var box = document.getElementById( 'piraeusbank-bank-setup' );
+	var form = document.getElementById( 'mainform' );
+	if ( box && form ) {
+		var style = window.getComputedStyle( form );
+		box.style.paddingLeft = style.paddingLeft;
+		box.style.paddingRight = style.paddingRight;
+		box.style.paddingBottom = style.paddingBottom;
+		if ( parseFloat( style.paddingBottom ) > 0 ) {
+			box.style.marginTop = '0';
+		}
+	}
+
 	document.addEventListener( 'click', function ( event ) {
 		var copy = event.target.closest( '[data-piraeusbank-copy]' );
 		if ( copy ) {
