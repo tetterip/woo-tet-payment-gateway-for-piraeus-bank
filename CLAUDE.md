@@ -89,3 +89,13 @@ These have been identified but not yet fixed — pick them up before adding new 
 
 - Bank password: only `md5:<digest>` is stored (the digest is what the SOAP call sends); plain values from older versions are converted in the gateway constructor. The settings field (`pb_secret` type) always renders empty.
 - Success responses are verified via SHA-256 / HMAC-SHA256 of the attempt's transaction ticket before any order status change; see *Callback authentication* above for the rest.
+
+## Proposed features / backlog (review 2026-09-26)
+
+Proposals from a suite-wide review, **not yet approved or scheduled** — discuss with the user before implementing. Remove or tick items here as they ship.
+
+1. **Fix the three items under "Known issues / technical debt"** (dead `functions.php`, invalid feature ID in `declare_transactions()`, `validate_fields()` skipping Block Checkout), then tag v3.6.2 — it was never tagged (latest tag v3.6.1).
+2. **Refunds from WC admin**, if the bank's service supports it.
+3. **Pay-by-link** — email the customer a payment link for phone/manual orders.
+4. **Apple Pay recording**, like the existing Google Pay FPAN/DPAN handling.
+- **Tests + CI (suite item S1)** — port the zero-dependency runner (`tests/run.php`, `tests/stubs.php`) and `.github/workflows/tests.yml` (PHP lint + tests on 7.4 / 8.1 / 8.2) from `woo-tet-acs-tracking`. Extract pure logic into testable functions first; aim for 10–20 tests on the decisions that matter.
