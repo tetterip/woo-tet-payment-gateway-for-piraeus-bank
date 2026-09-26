@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.4] - 2026-09-27
+
+### Changed
+- The "card payments are failing" warning (bank rejects the credentials) has a **Hide for 24 hours** link. It is hidden only for the admin who clicked it; it comes back after 24 hours if the problem is still there, and at once if the problem is fixed and happens again.
+
+---
+
 ## [3.6.3] - 2026-09-27
 
 ### Fixed

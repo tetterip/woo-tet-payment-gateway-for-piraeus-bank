@@ -20,6 +20,12 @@ class Health {
     public const FLAG_META          = '_piraeusbank_unconfirmed_flagged';
     public const CUSTOMER_CANCEL    = '_piraeusbank_customer_cancelled';
 
+    /** User meta: the credentials-error "since" a user hid the warning for, and when. */
+    public const SNOOZE_META        = 'piraeusbank_credentials_snoozed';
+
+    /** How long "Hide for 24 hours" hides the credentials warning. */
+    private const SNOOZE = DAY_IN_SECONDS;
+
     /** Time a customer may spend on the bank page before the attempt counts as unconfirmed. */
     private const GRACE = 2 * HOUR_IN_SECONDS;
 
@@ -37,6 +43,7 @@ class Health {
         add_action( 'init', [ self::class, 'schedule' ] );
         add_action( self::CRON_HOOK, [ self::class, 'reconcile' ] );
         add_action( 'admin_init', [ self::class, 'maybe_dismiss_report' ] );
+        add_action( 'admin_init', [ self::class, 'maybe_snooze_credentials' ] );
         add_action( 'admin_notices', [ self::class, 'credentials_notice' ] );
         add_action( 'admin_notices', [ self::class, 'report_notice' ] );
     }
@@ -67,8 +74,9 @@ class Health {
     }
 
     /**
-     * Not dismissible: it stands for a complete outage of card payments, and it removes
-     * itself as soon as a payment is started successfully.
+     * Stands for a complete outage of card payments, so it can only be hidden for 24 hours
+     * (per user); it removes itself as soon as a payment is started successfully, and a new
+     * outage shows it again at once.
      */
     public static function credentials_notice() {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -76,7 +84,7 @@ class Health {
         }
 
         $error = get_option( self::CREDENTIALS_OPTION );
-        if ( ! is_array( $error ) ) {
+        if ( ! is_array( $error ) || self::credentials_snoozed( $error ) ) {
             return;
         }
 
@@ -100,7 +108,37 @@ class Health {
             );
         }
         echo '</p><p><a class="button button-primary" href="' . esc_url( self::settings_url() ) . '">' . esc_html__( 'Check the credentials', Application::PLUGIN_NAMESPACE ) . '</a> ';
-        echo esc_html__( 'This warning disappears automatically after the next successful payment attempt.', Application::PLUGIN_NAMESPACE ) . '</p></div>';
+        echo esc_html__( 'This warning disappears automatically after the next successful payment attempt.', Application::PLUGIN_NAMESPACE ) . ' ';
+        $snooze = wp_nonce_url( add_query_arg( 'piraeusbank_snooze_credentials', '1' ), 'piraeusbank_snooze_credentials' );
+        echo '<a href="' . esc_url( $snooze ) . '">' . esc_html__( 'Hide for 24 hours', Application::PLUGIN_NAMESPACE ) . '</a></p></div>';
+    }
+
+    /**
+     * @param array $error The stored credentials error.
+     *
+     * @return bool True while the current user has hidden this outage's warning.
+     */
+    private static function credentials_snoozed( array $error ): bool {
+        $snooze = get_user_meta( get_current_user_id(), self::SNOOZE_META, true );
+
+        return is_array( $snooze )
+            && (int) ( $snooze['since'] ?? 0 ) === (int) $error['since']
+            && time() - (int) ( $snooze['at'] ?? 0 ) < self::SNOOZE;
+    }
+
+    public static function maybe_snooze_credentials() {
+        if ( ! isset( $_GET['piraeusbank_snooze_credentials'] ) || ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        check_admin_referer( 'piraeusbank_snooze_credentials' );
+        $error = get_option( self::CREDENTIALS_OPTION );
+        if ( is_array( $error ) ) {
+            update_user_meta( get_current_user_id(), self::SNOOZE_META, [ 'since' => (int) $error['since'], 'at' => time() ] );
+        }
+
+        wp_safe_redirect( remove_query_arg( [ 'piraeusbank_snooze_credentials', '_wpnonce' ] ) );
+        exit;
     }
 
     /**
