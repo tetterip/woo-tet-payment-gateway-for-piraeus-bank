@@ -65,6 +65,22 @@ PHP 7.4/8.x fixes and ongoing maintenance. See [CHANGELOG.md](CHANGELOG.md) for 
 This is not an official plugin of Piraeus Bank and is not endorsed by it. "Piraeus Bank" is a trademark of its
 owner and is used only to describe compatibility.
 
+## Updates and privacy
+
+This plugin gets its updates from the ttrp.gr update server (`https://plugins.ttrp.gr/`), not from WordPress.org.
+When WordPress checks for updates, and when you open **ttrp.gr Plugins → All Plugins**, your site sends that server:
+
+- the plugin's slug and installed version,
+- the WordPress version and the site's address (in the request's `User-Agent` header),
+- the admin language (All Plugins page only).
+
+The server logs these requests, with the IP address, for 180 days and keeps a list of which sites run which plugin
+version. No order, customer or other personal data is sent. Questions: info@ttrp.gr.
+
+## Security
+
+Please report vulnerabilities privately to **info@ttrp.gr**, not in a public issue. See [SECURITY.md](SECURITY.md).
+
 ## License
 
 GPL-3.0-or-later — see [LICENSE](LICENSE).
