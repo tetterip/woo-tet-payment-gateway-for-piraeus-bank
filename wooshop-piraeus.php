@@ -8,6 +8,7 @@
  * Author URI:        https://ttrp.gr
  * License:           GPL-3.0+
  * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
+ * Update URI:        https://plugins.ttrp.gr/
  * Text Domain:       woo-payment-gateway-for-piraeus-bank
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce
