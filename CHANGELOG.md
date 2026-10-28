@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.5] - 2026-10-28
+
+### Security
+- A response on the success URL with a technical error (ResultCode other than 0) marked the order "Failed" before its HashKey was checked. It now changes the order only when the HashKey verifies; otherwise the customer still sees the error and the order is left as it is.
+- A declined payment on the success URL now changes only orders still awaiting payment (pending or failed), as the fail URL already did. An IRIS payment on hold or a cancelled order is no longer turned into "Failed".
+
+---
+
 ## [3.6.4] - 2026-09-27
 
 ### Changed
