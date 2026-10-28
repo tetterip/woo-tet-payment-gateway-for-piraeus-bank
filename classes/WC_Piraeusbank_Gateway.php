@@ -911,7 +911,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
             // session notice would be lost, the bank's POST arrives without the session cookie.
             $this->set_message( $order, $message, 'error' );
 
-            if ( $order->has_status( [ 'pending', 'failed' ] ) ) {
+            // Only a response signed with this attempt's ticket may change the order.
+            if ( $order->has_status( [ 'pending', 'failed' ] ) && $this->match_hash_key( $tickets, $reference, $response ) !== '' ) {
                 $order->update_status( 'failed' );
             }
 
@@ -1032,7 +1033,11 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $message    = __( 'Thank you for shopping with us. <br />However, the transaction wasn\'t successful, payment wasn\'t received.', Application::PLUGIN_NAMESPACE );
         $pb_message = $this->set_message( $order, $message, 'error' );
 
-        $order->update_status( 'failed' );
+        // As on the fail URL: an order no longer awaiting payment (e.g. an IRIS payment on
+        // hold, or a cancelled order) is left for the merchant to reconcile.
+        if ( $order->has_status( [ 'pending', 'failed' ] ) ) {
+            $order->update_status( 'failed' );
+        }
 
         $this->safe_log( '---- Piraeus Payment NOT Received -----', [
             'ResponseCode' => $ResponseCode,
