@@ -801,7 +801,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $key = esc_attr( $this->id ) . '-card-doseis';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verified the checkout nonce before calling process_payment().
-        $doseis = isset( $_POST[ $key ] ) ? (int) wp_unslash( $_POST[ $key ] ) : 1;
+        $doseis = isset( $_POST[ $key ] ) ? intval( wp_unslash( $_POST[ $key ] ) ) : 1;
         if ( $doseis > 0 ) {
             $this->generic_add_meta( $order_id, '_doseis', $doseis );
         }
