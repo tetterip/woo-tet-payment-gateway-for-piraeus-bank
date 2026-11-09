@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Tested up to WordPress 7.1 and WooCommerce 11.2.
+- Shared ttrp-common library 1.1.0: a one-time admin notice on what update checks send to plugins.ttrp.gr, a "Data and privacy" box on **ttrp.gr Plugins → All Plugins**, and a suggested paragraph for the WordPress privacy policy guide.
 - The Block Checkout script is versioned by file time, so browsers load a new copy after an update.
 - Bank error notes on the order are no longer passed through `__()` with dynamic text (it could never be translated).
 
