@@ -801,7 +801,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $key = esc_attr( $this->id ) . '-card-doseis';
 
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verified the checkout nonce before calling process_payment().
-        $doseis = isset( $_POST[ $key ] ) ? absint( wp_unslash( $_POST[ $key ] ) ) : 1;
+        $doseis = isset( $_POST[ $key ] ) ? (int) wp_unslash( $_POST[ $key ] ) : 1;
         if ( $doseis > 0 ) {
             $this->generic_add_meta( $order_id, '_doseis', $doseis );
         }
@@ -1285,7 +1285,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      * @return void
      */
     private function redirect_and_exit( string $url ) {
-        wp_safe_redirect( $url );
+        // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- every target is built by the plugin (checkout, return URL, pay page, chosen page), never taken from the request; wp_safe_redirect() would send customers to wp-admin on multi-domain sites.
+        wp_redirect( $url );
         exit;
     }
 

@@ -10,7 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - Escape all admin and checkout output (SOAP notice, method description, installments field, bank error messages, receipt page, brand menu redirect) and unslash/sanitize posted checkout values, as reported by the health check.
-- Redirects after the bank callback use `wp_safe_redirect()`.
 
 ### Changed
 - Tested up to WordPress 7.1 and WooCommerce 11.2.
