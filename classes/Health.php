@@ -155,8 +155,9 @@ class Health {
         $table = $wpdb->prefix . 'piraeusbank_transactions';
         $now   = time();
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching -- daily cron over recent attempts; must be live.
         $refs = $wpdb->get_col( $wpdb->prepare(
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb->prefix.
             "SELECT DISTINCT merch_ref FROM {$table} WHERE timestamp BETWEEN %s AND %s LIMIT %d",
             gmdate( 'Y-m-d H:i:s', $now - self::WINDOW ),
             gmdate( 'Y-m-d H:i:s', $now - self::GRACE ),
@@ -204,7 +205,7 @@ class Health {
             update_option( self::REPORT_OPTION, $report, false );
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching -- table name from $wpdb->prefix; pruning, nothing to cache.
         $wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE timestamp < %s", gmdate( 'Y-m-d H:i:s', $now - self::RETENTION ) ) );
     }
 

@@ -33,7 +33,7 @@ if ( class_exists( '\Automattic\WooCommerce\Blocks\Payments\Integrations\Abstrac
                     'wp-html-entities',
                     'wp-i18n',
                 ],
-                null,
+                (string) filemtime( dirname( __DIR__ ) . '/assets/js/blocks/checkout.js' ),
                 true
             );
 

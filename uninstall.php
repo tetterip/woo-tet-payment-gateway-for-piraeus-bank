@@ -9,7 +9,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 global $wpdb;
 
-$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'piraeusbank_transactions' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
+$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'piraeusbank_transactions' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.DirectDatabaseQuery.NoCaching -- drops the plugin's own table.
 
 delete_option( 'woocommerce_piraeusbank_gateway_settings' );
 delete_option( 'piraeusbank_credentials_error' );

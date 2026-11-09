@@ -61,9 +61,11 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         // Load the form fields.
         $this->init_form_fields();
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check.
         $tableCheck = $wpdb->get_var( "SHOW TABLES LIKE '" . $wpdb->prefix . "piraeusbank_transactions'" );
 
         if ( $tableCheck !== $wpdb->prefix . 'piraeusbank_transactions' ) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- creates the plugin's own table.
             $wpdb->query( 'CREATE TABLE IF NOT EXISTS ' . $wpdb->prefix . 'piraeusbank_transactions (id int(11) unsigned NOT NULL AUTO_INCREMENT, merch_ref varchar(50) not null, trans_ticket varchar(32) not null , timestamp datetime default null, PRIMARY KEY (id))' );
         }
 
@@ -157,13 +159,15 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
     }
 
     public function my_custom_checkout_field_update_order_meta( $order_id ) {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- runs inside WooCommerce's checkout, which has verified its nonce.
         if ( ! empty( $_POST['cardholder_name'] ) ) {
             $order = wc_get_order( $order_id );
             if ( $order ) {
-                $order->update_meta_data( 'cardholder_name', sanitize_text_field( $_POST['cardholder_name'] ) );
+                $order->update_meta_data( 'cardholder_name', sanitize_text_field( wp_unslash( $_POST['cardholder_name'] ) ) );
                 $order->save();
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
     }
 
     public function admin_options() {
@@ -326,7 +330,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
     public function soap_error_notice() {
         echo '<div class="error notice">';
-        echo '<p>' . __( '<strong>SOAP have to be enabled in your Server/Hosting</strong>, it is required for this plugin to work properly!', Application::PLUGIN_NAMESPACE ) . '</p>';
+        echo '<p>' . wp_kses_post( __( '<strong>SOAP have to be enabled in your Server/Hosting</strong>, it is required for this plugin to work properly!', Application::PLUGIN_NAMESPACE ) ) . '</p>';
         echo '</div>';
     }
 
@@ -529,7 +533,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         }
 
         if ( $description = $this->get_description() ) {
-            echo wpautop( wptexturize( $description ) );
+            echo wp_kses_post( wpautop( wptexturize( $description ) ) );
         }
 
         $max_installments       = $this->pb_installments ?? 1;
@@ -554,16 +558,16 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
         if ( $max_installments > 1 ) {
                 $doseis_field = '<p class="form-row ">
-                    <label for="' . esc_attr( $this->id ) . '-card-doseis">' . __( 'Choose Installments', Application::PLUGIN_NAMESPACE ) . ' <span class="required">*</span></label>
+                    <label for="' . esc_attr( $this->id ) . '-card-doseis">' . esc_html__( 'Choose Installments', Application::PLUGIN_NAMESPACE ) . ' <span class="required">*</span></label>
                                 <select id="' . esc_attr( $this->id ) . '-card-doseis" name="' . esc_attr( $this->id ) . '-card-doseis" class="input-select wc-credit-card-form-card-doseis">
                                 ';
             for ( $i = 1; $i <= $max_installments; $i++ ) {
-                $doseis_field  .= '<option value="' . $i . '">' . ( $i === 1 ? __( 'Without installments', Application::PLUGIN_NAMESPACE ) : $i ) . '</option>';
+                $doseis_field  .= '<option value="' . (int) $i . '">' . ( $i === 1 ? esc_html__( 'Without installments', Application::PLUGIN_NAMESPACE ) : (int) $i ) . '</option>';
             }
             $doseis_field  .= '</select>
                         </p>'; // <img width="100%" height="100%" style="max-height:100px!important" src="'. plugins_url('img/alpha_cards.png', __FILE__) .'" >
 
-            echo $doseis_field;
+            echo $doseis_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from escaped parts above.
         }
     }
 
@@ -773,14 +777,14 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
                 Health::flag_credentials_error( sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultDescription ) );
             }
 
-            echo __( 'An error occured, please contact the Administrator. ', Application::PLUGIN_NAMESPACE );
-            echo ( 'Result code is ' . sanitize_text_field( $oResult->IssueNewTicketResult->ResultCode ) );
-            echo ( '. : ' . sanitize_text_field( $oResult->IssueNewTicketResult->ResultDescription ) );
-            $order->add_order_note( __( 'Error' . sanitize_text_field( $oResult->IssueNewTicketResult->ResultCode ) . ':' . sanitize_text_field( $oResult->IssueNewTicketResult->ResultDescription ), '' ) );
+            echo esc_html__( 'An error occured, please contact the Administrator. ', Application::PLUGIN_NAMESPACE );
+            echo esc_html( 'Result code is ' . sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultCode ) );
+            echo esc_html( '. : ' . sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultDescription ) );
+            $order->add_order_note( 'Error' . sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultCode ) . ':' . sanitize_text_field( (string) $oResult->IssueNewTicketResult->ResultDescription ) );
         }
         catch ( \SoapFault $fault ) {
-            $order->add_order_note( __( 'Error' . sanitize_text_field( $fault ), '' ) );
-            echo __( 'Error' . sanitize_text_field( $fault ), '' );
+            $order->add_order_note( 'Error' . sanitize_text_field( (string) $fault ) );
+            echo esc_html( 'Error' . sanitize_text_field( (string) $fault ) );
         }
 
         return '';
@@ -796,7 +800,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
         $key = esc_attr( $this->id ) . '-card-doseis';
 
-        $doseis = isset( $_POST[ $key ] ) ? (int) $_POST[ $key ] : 1;
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verified the checkout nonce before calling process_payment().
+        $doseis = isset( $_POST[ $key ] ) ? intval( wp_unslash( $_POST[ $key ] ) ) : 1;
         if ( $doseis > 0 ) {
             $this->generic_add_meta( $order_id, '_doseis', $doseis );
         }
@@ -813,8 +818,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      * @return void
      */
     public function receipt_page( $order ) {
-        echo '<p>' . __( 'Thank you - your order is now pending payment. You should be automatically redirected to Piraeus Paycenter to make payment.', Application::PLUGIN_NAMESPACE ) . '</p>';
-        echo $this->generate_piraeusbank_form( $order );
+        echo '<p>' . esc_html__( 'Thank you - your order is now pending payment. You should be automatically redirected to Piraeus Paycenter to make payment.', Application::PLUGIN_NAMESPACE ) . '</p>';
+        echo $this->generate_piraeusbank_form( $order ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- the form escapes every value it outputs.
     }
 
     /**
@@ -831,6 +836,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      * @return void
      */
     public function check_piraeusbank_response() {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- the bank's cross-site callback cannot carry a nonce; it is authenticated by the stored reference and HashKey (see above).
         $this->safe_log( '---- Piraeus Response -----', $_REQUEST );
         $this->safe_log( '---- End of Piraeus Response ----' );
 
@@ -887,6 +893,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         }
 
         $this->redirect_and_exit( $redirect_url );
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     }
 
     /**
@@ -1004,6 +1011,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
             // The order is paid, so every attempt on it (including the pre-3.5.0 plain-ID
             // reference) is spent.
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching -- deletes spent payment attempts; nothing to cache.
             $wpdb->query( $wpdb->prepare(
                 'DELETE FROM ' . $wpdb->prefix . 'piraeusbank_transactions WHERE merch_ref = %s OR merch_ref LIKE %s',
                 (string) $order_id,
@@ -1186,14 +1194,17 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
 
         if ( strpos( $reference, '-' ) === false ) {
             $sql = $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb->prefix.
                 "SELECT trans_ticket FROM {$table} WHERE merch_ref = %s AND timestamp > %s LIMIT 100",
                 $reference,
                 gmdate( 'Y-m-d H:i:s', time() - DAY_IN_SECONDS )
             );
         } else {
+            // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from $wpdb->prefix.
             $sql = $wpdb->prepare( "SELECT trans_ticket FROM {$table} WHERE merch_ref = %s LIMIT 100", $reference );
         }
 
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching -- prepared above; payment tickets must be read live.
         return array_map( 'strval', (array) $wpdb->get_col( $sql ) );
     }
 
@@ -1204,6 +1215,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      */
     private function read_response_fields(): array {
         $text = static function ( string $key ): string {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- bank callback, see check_piraeusbank_response().
             return isset( $_REQUEST[ $key ] ) && is_scalar( $_REQUEST[ $key ] ) ? sanitize_text_field( wp_unslash( $_REQUEST[ $key ] ) ) : '';
         };
 
@@ -1273,6 +1285,7 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
      * @return void
      */
     private function redirect_and_exit( string $url ) {
+        // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- every target is built by the plugin (checkout, return URL, pay page, chosen page), never taken from the request; wp_safe_redirect() would send customers to wp-admin on multi-domain sites.
         wp_redirect( $url );
         exit;
     }
@@ -1333,7 +1346,8 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         $validation_failed = false;
 
         foreach ($requiredFields as $field => $info) {
-            if ( ! isset( $_POST[ $field ] ) || trim( $_POST[ $field ] ) === '' ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verified the checkout nonce before validate_fields().
+            if ( ! isset( $_POST[ $field ] ) || trim( sanitize_text_field( wp_unslash( $_POST[ $field ] ) ) ) === '' ) {
 
                 if ( defined( 'REST_REQUEST' ) ) {
                     //$parameters = $request->get_query_params();
