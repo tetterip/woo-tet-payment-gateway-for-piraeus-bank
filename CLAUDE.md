@@ -94,7 +94,7 @@ These have been identified but not yet fixed — pick them up before adding new 
 
 Proposals from a suite-wide review, **not yet approved or scheduled** — discuss with the user before implementing. Remove or tick items here as they ship.
 
-1. **Fix the three items under "Known issues / technical debt"** (dead `functions.php`, invalid feature ID in `declare_transactions()`, `validate_fields()` skipping Block Checkout), then tag v3.6.2 — it was never tagged (latest tag v3.6.1).
+1. **Fix the three items under "Known issues / technical debt"** (dead `functions.php`, invalid feature ID in `declare_transactions()`, `validate_fields()` skipping Block Checkout), then release.
 2. **Refunds from WC admin**, if the bank's service supports it.
 3. **Pay-by-link** — email the customer a payment link for phone/manual orders.
 4. **Apple Pay recording**, like the existing Google Pay FPAN/DPAN handling.
