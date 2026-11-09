@@ -236,7 +236,7 @@ class Diagnostics {
      * @return array|\WP_Error
      */
     private static function post_to_origin( string $url, array $args ) {
-        $ip = isset( $_SERVER['SERVER_ADDR'] ) ? (string) $_SERVER['SERVER_ADDR'] : '';
+        $ip = isset( $_SERVER['SERVER_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_ADDR'] ) ) : '';
         if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
             $ip = '127.0.0.1';
         }
@@ -304,6 +304,7 @@ class Diagnostics {
      * @param string $hook_suffix
      */
     public static function enqueue( $hook_suffix ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check of the current settings section.
         if ( $hook_suffix !== 'woocommerce_page_wc-settings' || ! isset( $_GET['section'] ) || $_GET['section'] !== 'piraeusbank_gateway' || ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }

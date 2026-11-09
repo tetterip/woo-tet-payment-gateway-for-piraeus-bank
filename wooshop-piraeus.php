@@ -3,7 +3,7 @@
  * Plugin Name:       Piraeus Bank Payment Gateway for WooCommerce
  * Plugin URI:        https://ttrp.gr
  * Description:       Piraeus Bank Payment Gateway allows you to accept payment through various channels such as Maestro, Mastercard, AMex cards, Diners and Visa cards on your WooCommerce powered site.
- * Version:           3.6.5
+ * Version:           3.6.6
  * Author:            Michalis Tetteris
  * Author URI:        https://ttrp.gr
  * License:           GPL-3.0+
@@ -13,10 +13,10 @@
  * Domain Path:       /languages
  * Requires Plugins:  woocommerce
  * Requires at least: 4.0
- * Tested up to:      7.0
+ * Tested up to:      7.1
  * Requires PHP:      7.4
  * WC requires at least: 5.0
- * WC tested up to:   10.7.0
+ * WC tested up to:   11.2
  * Based on:          "Piraeus Bank WooCommerce Payment Gateway" by Papaki (Enartia S.A.), itself based on the original by emspace.gr, GPL-3.0-or-later
  */
 
@@ -55,7 +55,7 @@ add_action( 'plugins_loaded', function () {
     if ( ! class_exists( '\WC_Payment_Gateway' ) ) {
         add_action( 'admin_notices', function () {
             echo '<div class="notice notice-error"><p>';
-            echo __( 'Piraeus Bank Payment Gateway requires WooCommerce to be installed and active.', 'woo-payment-gateway-for-piraeus-bank' );
+            echo esc_html__( 'Piraeus Bank Payment Gateway requires WooCommerce to be installed and active.', 'woo-payment-gateway-for-piraeus-bank' );
             echo '</p></div>';
         } );
         return;
@@ -102,9 +102,9 @@ function ttrp_pb_maybe_register_brand_menu(): void {
                 }
             }
             if ( $target ) {
-                $url = esc_url( admin_url( 'admin.php?page=' . $target ) );
-                echo '<meta http-equiv="refresh" content="0;url=' . $url . '">';
-                echo '<script>window.location.replace("' . $url . '");</script>';
+                $url = admin_url( 'admin.php?page=' . $target );
+                echo '<meta http-equiv="refresh" content="0;url=' . esc_url( $url ) . '">';
+                echo '<script>window.location.replace("' . esc_js( esc_url_raw( $url ) ) . '");</script>';
             }
         }
     }
@@ -119,6 +119,7 @@ function ttrp_pb_add_submenu(): void {
     add_submenu_page( 'ttrp-plugins', 'Piraeus Bank', 'Piraeus Bank', 'manage_options', 'ttrp-piraeus-bank', '__return_null' );
 }
 function ttrp_pb_redirect(): void {
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only menu redirect, compared to a fixed slug.
     if ( isset( $_GET['page'] ) && 'ttrp-piraeus-bank' === $_GET['page'] ) {
         wp_safe_redirect( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=piraeusbank_gateway' ) );
         exit;

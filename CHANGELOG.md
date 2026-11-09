@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.6] - 2026-11-09
+
+### Security
+- Escape all admin and checkout output (SOAP notice, method description, installments field, bank error messages, receipt page, brand menu redirect) and unslash/sanitize posted checkout values, as reported by the health check.
+
+### Changed
+- Tested up to WordPress 7.1 and WooCommerce 11.2.
+- Shared ttrp-common library 1.1.0: a one-time admin notice on what update checks send to plugins.ttrp.gr, a "Data and privacy" box on **ttrp.gr Plugins → All Plugins**, and a suggested paragraph for the WordPress privacy policy guide.
+- The Block Checkout script is versioned by file time, so browsers load a new copy after an update.
+- Bank error notes on the order are no longer passed through `__()` with dynamic text (it could never be translated).
+
+---
+
 ## [3.6.5] - 2026-10-28
 
 ### Security
