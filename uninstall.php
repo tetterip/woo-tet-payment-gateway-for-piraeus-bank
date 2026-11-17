@@ -14,6 +14,7 @@ $wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'piraeusbank_transaction
 delete_option( 'woocommerce_piraeusbank_gateway_settings' );
 delete_option( 'piraeusbank_credentials_error' );
 delete_option( 'piraeusbank_unconfirmed_orders' );
+delete_option( 'piraeusbank_db_version' );
 
 delete_transient( 'piraeusbank_server_ip' );
 delete_transient( 'piraeusbank_outbound_ip' );

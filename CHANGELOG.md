@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.6.7] - 2026-11-17
+
+### Changed
+- The `piraeusbank_transactions` table gets indexes on `merch_ref` (looked up on every bank callback) and `timestamp` (daily check and pruning), added automatically once (database version 2). The gateway no longer runs a `SHOW TABLES` query each time it is loaded.
+- Tested up to WooCommerce 11.3.
+
+---
+
 ## [3.6.6] - 2026-11-09
 
 ### Security
