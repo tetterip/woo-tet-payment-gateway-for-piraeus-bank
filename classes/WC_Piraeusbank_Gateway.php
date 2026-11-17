@@ -48,6 +48,32 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
     protected string $notify_url;
     protected ?string $redirect_page_id;
 
+    /** Option holding the schema version of the piraeusbank_transactions table. */
+    const DB_OPTION = 'piraeusbank_db_version';
+
+    /** 2: indexes on merch_ref (callback lookup) and timestamp (daily check, pruning). */
+    const DB_VERSION = '2';
+
+    /**
+     * Creates the ticket table, or adds what an older schema lacks (dbDelta).
+     */
+    public static function install_table() {
+        global $wpdb;
+        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        $table   = $wpdb->prefix . 'piraeusbank_transactions';
+        $charset = $wpdb->get_charset_collate();
+        dbDelta( "CREATE TABLE {$table} (
+  id int(11) unsigned NOT NULL AUTO_INCREMENT,
+  merch_ref varchar(50) NOT NULL,
+  trans_ticket varchar(32) NOT NULL,
+  timestamp datetime DEFAULT NULL,
+  PRIMARY KEY  (id),
+  KEY merch_ref (merch_ref),
+  KEY timestamp (timestamp)
+) {$charset};" );
+        update_option( self::DB_OPTION, self::DB_VERSION );
+    }
+
     public function __construct() {
         global $wpdb;
 
@@ -61,12 +87,10 @@ class WC_Piraeusbank_Gateway extends \WC_Payment_Gateway {
         // Load the form fields.
         $this->init_form_fields();
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching -- schema check.
-        $tableCheck = $wpdb->get_var( "SHOW TABLES LIKE '" . $wpdb->prefix . "piraeusbank_transactions'" );
-
-        if ( $tableCheck !== $wpdb->prefix . 'piraeusbank_transactions' ) {
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- creates the plugin's own table.
-            $wpdb->query( 'CREATE TABLE IF NOT EXISTS ' . $wpdb->prefix . 'piraeusbank_transactions (id int(11) unsigned NOT NULL AUTO_INCREMENT, merch_ref varchar(50) not null, trans_ticket varchar(32) not null , timestamp datetime default null, PRIMARY KEY (id))' );
+        // Create or upgrade the ticket table only when its schema version changes, not with a
+        // SHOW TABLES query every time the gateway is loaded.
+        if ( get_option( self::DB_OPTION ) !== self::DB_VERSION ) {
+            self::install_table();
         }
 
         // Load the settings.
